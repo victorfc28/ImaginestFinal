@@ -14,8 +14,8 @@
     $mail->Port = 587;
     
     //Credencials del compte GMAIL
-    $mail->Username = 'email@gmail.com';
-    $mail->Password = 'password';
+    $mail->Username = 'imaginestprueba@gmail.com';
+    $mail->Password = 'Educem00.';
 
     //Dades del correu electrònic
     $mail->SetFrom('emissor@gmail.com','imagiNest Team');
