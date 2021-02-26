@@ -1,7 +1,7 @@
 <?php
     try{
         //Comprovem si l'usuari existeix
-        $sql = "SELECT username,passHash,active FROM `users` WHERE mail=:mail OR username=:username";
+        $sql = "SELECT iduser,username,passHash,active FROM `users` WHERE mail=:mail OR username=:username";
         $usuaris = $db->prepare($sql);
         $usuaris->execute(array(
             ':mail' => $userEmail,
@@ -23,7 +23,7 @@
                             if($update){
                                 //Si s'han verificat les credencials i s'ha actualitzat la data d'accés iniciarem la sessió
                                 session_start();
-                                $_SESSION["username"] = $fila['username'];
+                                $_SESSION["iduser"] = $fila['iduser'];
                                 header('Location: home.php');
                                 exit;
                             }else{
