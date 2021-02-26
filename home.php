@@ -4,6 +4,25 @@ if (!isset($_SESSION["username"])) {
 header('Location: ./index.php?redirected');
 exit;
 }*/
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+  $fileSize = $_FILES["myfile"]["size"];
+  if($fileSize > 3000000){ //Només es podran pujar fotografies que ocupin fins a 3MB
+      echo "<br>El archivo subido ocupa demasiado (>3MB)";
+      return;
+  }
+  $fileName = hash('sha256', $_FILES["myfile"]["name"]).rand(); //Farem un hash al nom del fitxer i li concatenarem un rand
+  $fileInfo = pathinfo($_FILES["myfile"]["name"]);
+  $res = move_uploaded_file($_FILES["myfile"]["tmp_name"],
+      "uploads/" . $fileName . "." . $fileInfo['extension']); //Mourem el fitxer a uploads i li concatenarem el hash amb l'extensió del fitxer
+  if($res){
+      //Si s'ha publicat la fotografia l'usuari tornarà a la pàgina Home
+      header('Location: ./home.php');
+      exit;
+  }else{
+      echo "<br>Error en la publicación";
+  }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,54 +38,56 @@ exit;
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="contenedorlogo">
 <img class ="logo" src="./images/imaginest.png"></img>
+</div>
 
-
-<div class="container d-flex justify-content-center mt-200">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="stars">
-                <form action=""> 
-                  <input class="star star-5" id="star-5" type="radio" name="star" /> <label class="star star-5" for="star-5"></label> 
-                  <input class="star star-4" id="star-4" type="radio" name="star" /> <label class="star star-4" for="star-4"></label> 
-                  <input class="star star-3" id="star-3" type="radio" name="star" /> <label class="star star-3" for="star-3"></label> 
-                  <input class="star star-2" id="star-2" type="radio" name="star" /> <label class="star star-2" for="star-2"></label> 
-                  <input class="star star-1" id="star-1" type="radio" name="star" /> <label class="star star-1" for="star-1"></label> 
-                </form>
+  <div class="container d-flex justify-content-center mt-200">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="stars">
+                  <form action=""> 
+                    <input class="star star-5" id="star-5" type="radio" name="star" /> <label class="star star-5" for="star-5"></label> 
+                    <input class="star star-4" id="star-4" type="radio" name="star" /> <label class="star star-4" for="star-4"></label> 
+                    <input class="star star-3" id="star-3" type="radio" name="star" /> <label class="star star-3" for="star-3"></label> 
+                    <input class="star star-2" id="star-2" type="radio" name="star" /> <label class="star star-2" for="star-2"></label> 
+                    <input class="star star-1" id="star-1" type="radio" name="star" /> <label class="star star-1" for="star-1"></label> 
+                  </form>
+              </div>
+          </div>
+      </div>
+</div>
+<div class="contenedorfoto">
+        <div id="carouselInicio" class="carousel slide imagencarrousel" data-bs-ride="carousel">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselInicio"  data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <div class="carousel-inner imagencarrousel">
+            <div class="carousel-item active imagencarrousel">
+              <img src="./images/wallpaper/bow-lake-5854210_1920.jpg" class="imagencarrousel">
             </div>
+            <div class="carousel-item imagencarrousel">
+              <img src="./images/wallpaper/leaves-5839550_1920.jpg" class="imagencarrousel">
+            </div>
+            <div class="carousel-item imagencarrousel">
+              <img src="./images/wallpaper/tree-5887086_1920.jpg" class="imagencarrousel">
+            </div>
+          </div>
+
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselInicio"  data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-    </div>
-</div>
-<div id="carouselInicio" class="carousel slide imagencarrousel" data-bs-ride="carousel">
-<button class="carousel-control-prev" type="button" data-bs-target="#carouselInicio"  data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <div class="carousel-inner imagencarrousel">
-    <div class="carousel-item active imagencarrousel">
-      <img src="./images/wallpaper/bow-lake-5854210_1920.jpg" class="imagencarrousel">
-    </div>
-    <div class="carousel-item imagencarrousel">
-      <img src="./images/wallpaper/leaves-5839550_1920.jpg" class="imagencarrousel">
-    </div>
-    <div class="carousel-item imagencarrousel">
-      <img src="./images/wallpaper/tree-5887086_1920.jpg" class="imagencarrousel">
-    </div>
+
+
+        <div class="textofoto">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Duis id metus est. Morbi quis neque commodo, ornare dolor non, lacinia arcu. Donec
+        at varius urna. Vestibulum ante ipsum primis in 
+        </div>
   </div>
-
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselInicio"  data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-
-
-<div class="textofoto">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-Duis id metus est. Morbi quis neque commodo, ornare dolor non, lacinia arcu. Donec
- at varius urna. Vestibulum ante ipsum primis in 
-</div>
-
 <!-- Modal -->
 <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
