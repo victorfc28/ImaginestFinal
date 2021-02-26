@@ -25,7 +25,15 @@
   text-decoration: none;
   border: 0px;
   background-color: inherit;
-
+  transition: 0.3s;
+}
+.nav__icon{
+  color: rgb(34, 34, 34);   
+  transition: 0.3s;
+}
+.nav__icon:hover {
+  color: rgb(0, 68, 255);   
+  transition: 0.3s;
 }
 
 
@@ -43,11 +51,14 @@ a:hover {
   font-size: 18px;
 }
 
+.contenedorlogo{
+  box-shadow: 0 0.9px 5px rgba(0, 0, 0, 0.2);
+}
 .logo{
-
+    display: block;
     margin-left: auto;
     margin-right: auto;
-    display:block;
+
   }
 
 /*carrousel*/
@@ -94,6 +105,7 @@ a:hover {
     display:block;
     margin-bottom: 75px;
     margin-top: 40px;
+    text-align: justify;
   }
   .botonizquierda{
     position: relative;
@@ -129,6 +141,7 @@ a:hover {
       display:block;
       margin-top: 35px;
       margin-bottom: 75px;
+      text-align: justify;
     }
     .botonizquierda{
       position: relative;
@@ -160,7 +173,6 @@ a:hover {
 /*textofoto*/
   
 div.stars {
-  width: 300px;
   display: inline-block;
 
 }
