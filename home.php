@@ -3,69 +3,28 @@ session_start();
 if (!isset($_SESSION["iduser"])) {
 header("Location: ./index.php?redirected");
 }
-
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-  $fileSize = $_FILES["myfile"]["size"];
-  $photoText = $_POST["photoDescription"];
-  if($fileSize > 3000000){ //Només es podran pujar fotografies que ocupin fins a 3MB
-      echo "<br>El archivo subido ocupa demasiado (>3MB)";
-      return;
+else
+{
+  if($_SERVER["REQUEST_METHOD"] == "POST"){
+    include_once("./photoShare.php");
   }
-  $fileName = hash('sha256', $_FILES["myfile"]["name"]).rand(); //Farem un hash al nom del fitxer i li concatenarem un rand
-  $fileInfo = pathinfo($_FILES["myfile"]["name"]);
-  $fileLocation = "uploads/" . $fileName . "." . $fileInfo['extension'];
-  $res = move_uploaded_file($_FILES["myfile"]["tmp_name"],$fileLocation); //Mourem el fitxer a uploads i li concatenarem el hash amb l'extensió del fitxer
-  if($res){
-      //Si s'ha publicat la fotografia l'usuari tornarà a la pàgina Home
-      require_once("./database_connect.php");
-      $sql = "INSERT INTO `photos` values(:photoID,sysdate(),:photoText,:likes,:dislikes,:link,:iduser)";
-                $insert = $db->prepare($sql);
-                $insert->execute(array(
-                    ':photoID' => NULL,
-                    ':photoText' => $photoText,
-                    ':likes' => 0,
-                    ':dislikes' => 0,
-                    ':link' => "uploads/" . $fileName . "." . $fileInfo['extension'],
-                    ':iduser' =>  $_SESSION["iduser"]
-                ));
-                if($insert){
-                  echo("Foto subida");
-                  $qttHashtag = preg_match_all('/#(\w)*/', $photoText, $matches);
-                  foreach ($matches[0] as $tag) {
-                    $sql = "SELECT tagName FROM `tags` WHERE tagName=:tag";
-                    $tags = $db->prepare($sql);
-                    $tags->execute(array(
-                        ':tag' => $tag,
-                    ));
-                    if($tags){
-                        $count = $tags->rowcount();
-                        if($count==0){
-                          $sql = "INSERT INTO `tags` values(:tagName)";
-                          $insert = $db->prepare($sql);
-                          $insert->execute(array(
-                            ':tagName' => $tag
-                          ));
-                        }
-                    }else{
-                      print_r($db->errorinfo());
-                    }
+  $fechafoto = comprobarfotosUsuario();
+  if($fechafoto != null)
+  {
 
-                    $sql = 'SELECT photoID FROM `photos` WHERE url = :link';
-                    $preparada = $db->prepare($sql);
-                    $preparada->execute(array(':link' => $fileLocation));
-                    $idphoto = $preparada->fetch(PDO::FETCH_ASSOC);
-
-                    $sql = "INSERT INTO `te` values(:photoID,:tagName)";
-                    $insert = $db->prepare($sql);
-                    $insert->execute(array(
-                      ':photoID' => $idphoto,
-                      ':tagName' => $tag
-                    ));
-                  }
-                }
-  }else{
-    echo "<br>Error en la publicación";
   }
+
+}
+
+function comprobarfotosUsuario()
+{
+  $fotos = 0;
+  $fechaultimafoto = null;
+
+
+
+
+  return $fechaultimafoto;
 }
 ?>
 <!DOCTYPE html>
@@ -82,6 +41,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+<?php if((isset($error))&&$error==2){
+  echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Perfecto!</strong> Has colgado una foto.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>';
+}?>
 <div class="contenedorlogo">
 <img class ="logo" src="./images/imaginest.png"></img>
 </div>
@@ -102,28 +67,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </div>
 </div>
 <div class="contenedorfoto">
-        <div id="carouselInicio" class="carousel slide imagencarrousel" data-bs-ride="carousel">
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselInicio"  data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <div class="carousel-inner imagencarrousel">
-            <div class="carousel-item active imagencarrousel">
-              <img src="./images/wallpaper/bow-lake-5854210_1920.jpg" class="imagencarrousel">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+            <div class="imagencarrousel">
+              <input type="submit"  class="material-icons elementocarrousel botonizquierda"name="dislike" value="keyboard_arrow_left"></input>
+              <img src="./images/wallpaper/leaves-5839550_1920.jpg"  class="imagencarrousel2">
+              <input type="submit"  class="material-icons elementocarrousel botonderecha"name="like" value="keyboard_arrow_right"></input>
             </div>
-            <div class="carousel-item imagencarrousel">
-              <img src="./images/wallpaper/leaves-5839550_1920.jpg" class="imagencarrousel">
-            </div>
-            <div class="carousel-item imagencarrousel">
-              <img src="./images/wallpaper/tree-5887086_1920.jpg" class="imagencarrousel">
-            </div>
-          </div>
-
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselInicio"  data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
+        </form>
 
 
         <div class="textofoto">
@@ -131,7 +81,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         Duis id metus est. Morbi quis neque commodo, ornare dolor non, lacinia arcu. Donec
         at varius urna. Vestibulum ante ipsum primis in 
         </div>
-  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="popup" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
@@ -173,5 +123,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 </body>
 </html>

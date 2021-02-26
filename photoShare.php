@@ -1,36 +1,66 @@
 <?php
-    if(!isset($_SESSION["username"])){
-        header('Location: ./index.php');
-        exit;
-    }else if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $fileSize = $_FILES["myfile"]["size"];
-        if($fileSize > 3000000){ //Només es podran pujar fotografies que ocupin fins a 3MB
-            echo "<br>El archivo subido ocupa demasiado (>3MB)";
-            return;
-        }
-        $fileName = hash('sha256', $_FILES["myfile"]["name"]).rand(); //Farem un hash al nom del fitxer i li concatenarem un rand
-        $fileInfo = pathinfo($_FILES["myfile"]["name"]);
-        $res = move_uploaded_file($_FILES["myfile"]["tmp_name"],
-            "uploads/" . $fileName . "." . $fileInfo['extension']); //Mourem el fitxer a uploads i li concatenarem el hash amb l'extensió del fitxer
-        if($res){
-            //Si s'ha publicat la fotografia l'usuari tornarà a la pàgina Home
-            header('Location: ./home.php');
-            exit;
-        }else{
-            echo "<br>Error en la publicación";
-        }
-    }
+  $error=0;
+  $fileSize = $_FILES["myfile"]["size"];
+  $photoText = $_POST["photoDescription"];
+  if($fileSize > 3000000){ //Només es podran pujar fotografies que ocupin fins a 3MB
+      echo "<br>El archivo subido ocupa demasiado (>3MB)";
+      $error=1;
+      return;
+  }
+  $fileName = hash('sha256', $_FILES["myfile"]["name"]).rand(); //Farem un hash al nom del fitxer i li concatenarem un rand
+  $fileInfo = pathinfo($_FILES["myfile"]["name"]);
+  $fileLocation = "uploads/" . $fileName . "." . $fileInfo['extension'];
+  $res = move_uploaded_file($_FILES["myfile"]["tmp_name"],$fileLocation); //Mourem el fitxer a uploads i li concatenarem el hash amb l'extensió del fitxer
+  if($res){
+      //Si s'ha publicat la fotografia l'usuari tornarà a la pàgina Home
+      require_once("./database_connect.php");
+      $sql = "INSERT INTO `photos` values(:photoID,sysdate(),:photoText,:likes,:dislikes,:link,:iduser)";
+                $insert = $db->prepare($sql);
+                $insert->execute(array(
+                    ':photoID' => NULL,
+                    ':photoText' => $photoText,
+                    ':likes' => 0,
+                    ':dislikes' => 0,
+                    ':link' => "uploads/" . $fileName . "." . $fileInfo['extension'],
+                    ':iduser' =>  $_SESSION["iduser"]
+                ));
+                if($insert){
+                  $qttHashtag = preg_match_all('/#(\w)*/', $photoText, $matches);
+                  foreach ($matches[0] as $tag) {
+                    $sql = "SELECT tagName FROM `tags` WHERE tagName=:tag";
+                    $tags = $db->prepare($sql);
+                    $tags->execute(array(
+                        ':tag' => $tag,
+                    ));
+                    if($tags){
+                        $count = $tags->rowcount();
+                        if($count==0){
+                          $sql = "INSERT INTO `tags` values(:tagName)";
+                          $insert = $db->prepare($sql);
+                          $insert->execute(array(
+                            ':tagName' => $tag
+                          ));
+                        }
+                    }else{
+                      print_r($db->errorinfo());
+                    }
+
+                    $sql = 'SELECT photoID FROM `photos` WHERE url = :link';
+                    $preparada = $db->prepare($sql);
+                    $preparada->execute(array(':link' => $fileLocation));
+                    $idphoto = $preparada->fetch(PDO::FETCH_ASSOC);
+
+                    $sql = "INSERT INTO `te` values(:photoID,:tagName)";
+                    $insert = $db->prepare($sql);
+                    $insert->execute(array(
+                      ':photoID' => $idphoto["photoID"],
+                      ':tagName' => $tag
+                    ));
+                  }
+                  $error=2;
+
+                }
+  }else{
+    echo "<br>Error en la publicación";
+  }
 ?>
-<!DOCTYPE html>
-<html>
-<title>imagiNest - Subir una foto</title>
-<body>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
-        <label for="photoDescription">Describe tu fotografía:</label><br>
-        <textarea name="photoDescription" cols="40" rows="5"></textarea><br>
-        <label for="myfile">Selecciona una imagen:</label>
-        <input type="file" id="myfile" name="myfile" accept="image/*"><br>
-        <input type="submit" value="Publicar fotografía">
-    </form> 
-</body>
-</html>
