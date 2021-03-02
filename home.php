@@ -1,30 +1,70 @@
 <?php
 session_start();
-if (!isset($_SESSION["iduser"])) {
-header("Location: ./index.php?redirected");
+if (!isset($_SESSION["iduser"]) && !isset($_COOKIE["logged"])) {
+  header("Location: ./index.php?redirected");
+  exit;
 }
 else
 {
+  require_once("./database_connect.php");
+  if(isset($_COOKIE["logged"]) && $_COOKIE["logged"]==0){
+    $sql = "SELECT count(*) FROM photos WHERE iduser=:iduser";
+    $fotos = $db->prepare($sql);
+    $fotos->execute(array(
+            ':iduser' => $_SESSION["iduser"]
+    ));
+    $numfotos = $fotos->fetch(PDO::FETCH_ASSOC);
+    if($numfotos["count(*)"]> 0)
+    {
+      $sql = "SELECT url,photoText FROM photos WHERE iduser=:iduser ORDER BY publishDate DESC LIMIT 1";
+      $ultimafoto = $db->prepare($sql);
+      $ultimafoto->execute(array(
+              ':iduser' => $_SESSION["iduser"]
+      ));
+      $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
+      
+      $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardar la URL de la foto en la variable de sesion lastPhoto
+      $textofoto = $urlfoto["photoText"]; 
+      setcookie('logged',1,time()+3600247); //Modificarem la cookie per saber que l'usuari ja ha accedit anteriorment
+    }else{
+      $_SESSION["lastPhoto"] = null;
+      setcookie('logged',1,time()+3600247);
+    }
+  }else if(isset($_COOKIE["logged"]) && $_COOKIE["logged"]==1){
+    //Rand de fotos
+    
+      $sql = "SELECT url ,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+      $ultimafoto = $db->prepare($sql);
+      $ultimafoto->execute(array(
+              ':iduser' => $_SESSION["iduser"]
+      ));
+      $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
+      if($urlfoto != false)
+      {
+        while($_SESSION["lastPhoto"] == $urlfoto["url"])
+        {
+          $sql = "SELECT url ,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+          $ultimafoto = $db->prepare($sql);
+          $ultimafoto->execute(array(
+                  ':iduser' => $_SESSION["iduser"]
+        ));
+        $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
+    }
+      $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardar la URL de la foto en la variable de sesion lastPhoto
+      $textofoto = $urlfoto["photoText"]; 
+      }
+
+      
+
+
+  }
+  
+  
   if($_SERVER["REQUEST_METHOD"] == "POST"){
     include_once("./photoShare.php");
   }
-  $fechafoto = comprobarfotosUsuario();
-  if($fechafoto != null)
-  {
-
-  }
-
-}
-
-function comprobarfotosUsuario()
-{
-  $fotos = 0;
-  $fechaultimafoto = null;
 
 
-
-
-  return $fechaultimafoto;
 }
 ?>
 <!DOCTYPE html>
@@ -70,16 +110,14 @@ function comprobarfotosUsuario()
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
             <div class="imagencarrousel">
               <input type="submit"  class="material-icons elementocarrousel botonizquierda"name="dislike" value="keyboard_arrow_left"></input>
-              <img src="./images/wallpaper/leaves-5839550_1920.jpg"  class="imagencarrousel2">
+              <img src="<?php if(isset($urlfoto) && $urlfoto !=false) echo "./".$urlfoto["url"];?>"  class="imagencarrousel2">
               <input type="submit"  class="material-icons elementocarrousel botonderecha"name="like" value="keyboard_arrow_right"></input>
             </div>
         </form>
 
 
         <div class="textofoto">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-        Duis id metus est. Morbi quis neque commodo, ornare dolor non, lacinia arcu. Donec
-        at varius urna. Vestibulum ante ipsum primis in 
+        <?php if(isset($urlfoto) && $urlfoto !=false) echo $urlfoto["photoText"];?>
         </div>
 </div>
 <!-- Modal -->
