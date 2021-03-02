@@ -32,14 +32,14 @@ else
     }
   }else if(isset($_COOKIE["logged"]) && $_COOKIE["logged"]==1){
     //Rand de fotos
-    
+      //comprobar numero de fotos.
       $sql = "SELECT url ,photoText FROM photos ORDER BY RAND() LIMIT 1;";
       $ultimafoto = $db->prepare($sql);
       $ultimafoto->execute(array(
               ':iduser' => $_SESSION["iduser"]
       ));
       $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-      if($urlfoto != false)
+      if($urlfoto != false && $numerodefotos>1)
       {
         while($_SESSION["lastPhoto"] == $urlfoto["url"])
         {
