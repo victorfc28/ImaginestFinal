@@ -1,5 +1,5 @@
 <?php
-    if(isset($_SESSION["username"])){
+    if(isset($_SESSION["iduser"])){
         header('Location: ./home.php');
         exit;
     }else if($_SERVER["REQUEST_METHOD"] == "POST"){

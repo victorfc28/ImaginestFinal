@@ -1,11 +1,9 @@
 <?php
 session_start();
-if (!isset($_SESSION["iduser"]) && !isset($_COOKIE["logged"])) {
+if(!isset($_SESSION["iduser"])){
   header("Location: ./index.php?redirected");
   exit;
-}
-else
-{
+}else{
   require_once("./database_connect.php");
   if(isset($_COOKIE["logged"]) && $_COOKIE["logged"]==0){
     $sql = "SELECT count(*) FROM photos WHERE iduser=:iduser";
@@ -31,19 +29,26 @@ else
       setcookie('logged',1,time()+3600247);
     }
   }else if(isset($_COOKIE["logged"]) && $_COOKIE["logged"]==1){
-    //Rand de fotos
-      //comprobar numero de fotos.
-      $sql = "SELECT url ,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+      //Comprobarem el número de fotos penjades
+      $sql = "SELECT count(*) as Total FROM photos;";
+      $countfotos = $db->query($sql);
+      if($countfotos){
+        foreach($countfotos as $fila){
+          $numfotos = $fila['Total'];
+        }
+      }
+
+      $sql = "SELECT url,photoText FROM photos ORDER BY RAND() LIMIT 1;";
       $ultimafoto = $db->prepare($sql);
       $ultimafoto->execute(array(
               ':iduser' => $_SESSION["iduser"]
       ));
       $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-      if($urlfoto != false && $numerodefotos>1)
+      if($urlfoto!=false && $numfotos>1)
       {
         while($_SESSION["lastPhoto"] == $urlfoto["url"])
         {
-          $sql = "SELECT url ,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+          $sql = "SELECT url,photoText FROM photos ORDER BY RAND() LIMIT 1;";
           $ultimafoto = $db->prepare($sql);
           $ultimafoto->execute(array(
                   ':iduser' => $_SESSION["iduser"]
@@ -53,18 +58,10 @@ else
       $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardar la URL de la foto en la variable de sesion lastPhoto
       $textofoto = $urlfoto["photoText"]; 
       }
-
-      
-
-
   }
-  
-  
   if($_SERVER["REQUEST_METHOD"] == "POST"){
     include_once("./photoShare.php");
   }
-
-
 }
 ?>
 <!DOCTYPE html>
@@ -145,13 +142,13 @@ else
 </div>
 
 <nav class="navC">
-  <a href="#" class="nav__link">
+  <a href="./home.php" class="nav__link">
     <i class="material-icons nav__icon">home</i>
   </a>
   <button class="nav__link" data-bs-toggle="modal" data-bs-target="#popup">
     <i class="material-icons nav__icon">add_a_photo</i>
   </button>
-  <a href="#" class="nav__link">
+  <a href="./logout.php" class="nav__link">
     <i class="material-icons nav__icon">person</i>
   </a>
 </nav>

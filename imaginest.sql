@@ -2,7 +2,7 @@ create database imaginest character set utf8 collate utf8_bin;
 use imaginest;
 
 create table if not exists users(
-    iduser int auto_increment primary key,
+	iduser int auto_increment primary key,
     mail varchar(40) unique,
     username varchar(16) unique,
     passHash varchar(60),
@@ -39,9 +39,23 @@ create table if not exists te(
     tagName varchar(255),
     primary key (tagName,photoID),
     constraint fk_Te_Photos foreign key (photoID) references photos(photoID) 
-        on delete restrict
+		on delete restrict
         on update restrict,
-    constraint fk_Te_Tags foreign key (tagName) references tags(tagName) 
-        on delete restrict
+	constraint fk_Te_Tags foreign key (tagName) references tags(tagName) 
+		on delete restrict
+        on update restrict
+)Engine=InnoDB;
+
+create table if not exists Fa_like(
+    likea int,
+    dislikea int,
+    photoID int,
+    iduser int,
+    primary key (photoID,iduser),
+    constraint fk_Fa_like_Photos foreign key (photoID) references photos(photoID) 
+		on delete restrict
+        on update restrict,
+	constraint fk_Fa_like_Users foreign key (iduser) references users(iduser) 
+		on delete restrict
         on update restrict
 )Engine=InnoDB;

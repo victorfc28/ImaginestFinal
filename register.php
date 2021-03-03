@@ -1,7 +1,7 @@
 <?php
 	//He realitzat de més a més que les dades de l'usuari siguin xifrades a Base64 quan viatgi per POST.
 	session_start();
-	if(isset($_SESSION["username"])){
+	if(isset($_SESSION["iduser"])){
 		header('Location: ./home.php');
 		exit;
 	}
