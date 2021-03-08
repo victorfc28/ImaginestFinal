@@ -12,7 +12,6 @@
   $fileLocation = "uploads/" . $fileName . "." . $fileInfo['extension'];
   $res = move_uploaded_file($_FILES["myfile"]["tmp_name"],$fileLocation); //Mourem el fitxer a uploads i li concatenarem el hash amb l'extensió del fitxer
   if($res){
-      //Si s'ha publicat la fotografia l'usuari tornarà a la pàgina Home
       require_once("./database_connect.php");
       $sql = "INSERT INTO `photos` values(:photoID,sysdate(),:photoText,:likes,:dislikes,:link,:iduser)";
                 $insert = $db->prepare($sql);
@@ -56,6 +55,7 @@
                       ':photoID' => $idphoto["photoID"],
                       ':tagName' => $tag
                     ));
+                    setcookie('logged',0,time()+3600247);
                   }
                   $error=2;
 

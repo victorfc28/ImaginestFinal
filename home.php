@@ -78,16 +78,15 @@ if(!isset($_SESSION["iduser"])){
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="contenedorlogo">
+<img class ="logo" src="./images/imaginest.png"></img>
+</div>
 <?php if((isset($error))&&$error==2){
   echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
   <strong>Perfecto!</strong> Has colgado una foto.
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>';
 }?>
-<div class="contenedorlogo">
-<img class ="logo" src="./images/imaginest.png"></img>
-</div>
-
   <div class="container d-flex justify-content-center mt-200">
       <div class="row">
           <div class="col-md-12">
@@ -127,10 +126,10 @@ if(!isset($_SESSION["iduser"])){
       </div>
       <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
       <div class="modal-body">
-          <label for="photoDescription">Describe tu fotografía:</label><br>
-          <textarea name="photoDescription" cols="40" rows="5"></textarea><br>
           <label for="myfile">Selecciona una imagen:</label>
-          <input type="file" id="myfile" name="myfile" accept="image/*"><br>
+          <input type="file" id="myfile" name="myfile" accept="image/*" class="form-control"><br>
+          <label for="photoDescription">Describe tu fotografía:</label><br>
+          <textarea class="form-control" name="photoDescription" cols="40" rows="5" style='resize: none;'></textarea><br>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
