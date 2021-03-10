@@ -25,13 +25,13 @@
                   ':activationCode' => NULL
                 ));
                 if($update){
-                  header('Location: ./index.php?verified');
+                  header('Location: ../index.php?verified');
                   exit;
                 }else{
                   print_r($db->errorinfo());
                 }
               }else{
-                header('Location: ./index.php?redirected');
+                header('Location: ../index.php?redirected');
               }
             }
           }catch(PDOException $e){
@@ -39,7 +39,7 @@
           }
         }
         else{
-          header('Location: ./index.php?redirected');
+          header('Location: ../index.php?redirected');
           exit;
         }
     }

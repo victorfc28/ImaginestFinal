@@ -1,6 +1,6 @@
 <?php
     use PHPMailer\PHPMailer\PHPMailer;
-    require 'vendor/autoload.php';
+    require '../vendor/autoload.php';
     $mail = new PHPMailer();
     $mail->CharSet = 'utf-8'; //Indicarem UTF-8 per poder visualitzar d'entre altres els accents
     $mail->IsSMTP();
@@ -19,8 +19,8 @@
 
     //Dades del correu electrònic
     $mail->SetFrom('emissor@gmail.com','imagiNest Team');
-    $mail->Subject = 'Contraseña restablecida imagiNest';
-    $mail->MsgHTML("<p>Se ha modificado la contraseña de la cuenta con email $userEmail, si no has sido tú quien ha restablecido la contraseña... ¡You have been HACKED!</p>");
+    $mail->Subject = 'Restablecer contraseña imagiNest';
+    $mail->MsgHTML("<p>Se ha solicitado restablecer la contraseña para el usuario $username</p><a href='http://localhost/imaginest/php/resetPassword.php?code=$resetPassCode&mail=$userEmail'>¡Restablece tu contraseña ahora!</a>");
     //$mail->addAttachment("fitxer.pdf");
     
     //Destinatari

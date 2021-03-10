@@ -22,10 +22,13 @@
                             ));
                             if($update){
                                 //Si s'han verificat les credencials i s'ha actualitzat la data d'accés iniciarem la sessió
-                                session_start();
+                                if(!isset($_SESSION)) 
+                                { 
+                                    session_start(); 
+                                } 
                                 $_SESSION["iduser"] = $fila['iduser'];
                                 setcookie('logged',0,time()+3600247); //Crearem una cookie per indicar que l'usuari acaba d'entrar i aixi poder mostrar-li la seva última foto penjada
-                                header('Location: home.php');
+                                header('Location: ./php/home.php');
                                 exit;
                             }else{
                                 print_r($db->errorinfo());

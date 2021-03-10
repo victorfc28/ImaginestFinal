@@ -22,7 +22,7 @@
 					//Si s'ha restablert la contrasenya farem l'enviament del correu de confirmació
                     require_once("./changedPassMailSend.php");
 					//Farem la redirecció a la pàgina principal
-                  	header('Location: ./index.php?passChanged');
+                  	header('Location: ../index.php?passChanged');
                   	exit;
 				}else{
 					print_r($db->errorinfo());

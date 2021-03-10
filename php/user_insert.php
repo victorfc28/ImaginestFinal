@@ -34,7 +34,7 @@
                     //Si s'ha inserit farem l'enviament del correu de confirmació
                     require_once("./registerMailSend.php");
                     //Farem la redirecció a la pàgina principal
-                    header('Location: ./index.php?registered');
+                    header('Location: ../index.php?registered');
                     exit;
                 }else{
                     print_r($db->errorinfo());

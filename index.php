@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	if(isset($_SESSION["iduser"])){
-		header('Location: ./home.php');
+		header('Location: ./php/home.php');
 		exit;
 	}
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -9,8 +9,8 @@
             $userEmail = utf8_encode(base64_decode($_POST["secretUserEmail"]));
 			$password = utf8_encode(base64_decode($_POST["secretPass"]));
 
-			require_once("./database_connect.php");
-			require_once("./user_login.php");
+			require_once("./php/database_connect.php");
+			require_once("./php/user_login.php");
 		}
 	}
 ?>
@@ -113,7 +113,7 @@
 					</div>
 					<div class="text-center p-t-136">
 						<span class="txt1">¿No tienes cuenta imagiNest?</span>
-						<a class="txt2" href="./register.php">¡Regístrate!<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a>
+						<a class="txt2" href="./php/register.php">¡Regístrate!<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a>
 					</div>
 				</form>
 				<script>
@@ -134,7 +134,7 @@
           							<span aria-hidden="true">&times;</span>
         						</button>
       						</div>
-							<form action="<?php echo htmlspecialchars("./resetPasswordSend.php");?>" method="POST">
+							<form action="<?php echo htmlspecialchars("./php/resetPasswordSend.php");?>" method="POST">
       							<div class="modal-body">
 									<span class="login100-form-title">imagiNest</span>
 									<span class="login100-form-text">Restablecer contraseña</span>

@@ -13,7 +13,8 @@ if (!isset($_SESSION["iduser"])) {
         ));
         $numfotos = $fotos->fetch(PDO::FETCH_ASSOC);
         if ($numfotos["count(*)"] > 0) {
-            $sql = "SELECT url,photoText FROM photos WHERE iduser=:iduser ORDER BY publishDate DESC LIMIT 1";
+            //$sql = "SELECT url,photoText FROM photos WHERE iduser=:iduser ORDER BY publishDate DESC LIMIT 1";
+            $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser WHERE iduser=:iduser ORDER BY publishDate DESC LIMIT 1";
             $ultimafoto = $db->prepare($sql);
             $ultimafoto->execute(array(
                 ':iduser' => $_SESSION["iduser"],
@@ -37,7 +38,8 @@ if (!isset($_SESSION["iduser"])) {
             }
         }
 
-        $sql = "SELECT url,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+        //$sql = "SELECT url,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+        $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
         $ultimafoto = $db->prepare($sql);
         $ultimafoto->execute(array(
             ':iduser' => $_SESSION["iduser"],
@@ -45,7 +47,7 @@ if (!isset($_SESSION["iduser"])) {
         $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
         if ($urlfoto != false && $numfotos > 1) {
             while ($_SESSION["lastPhoto"] == $urlfoto["url"]) {
-                $sql = "SELECT url,photoText FROM photos ORDER BY RAND() LIMIT 1;";
+              $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
                 $ultimafoto = $db->prepare($sql);
                 $ultimafoto->execute(array(
                     ':iduser' => $_SESSION["iduser"],
@@ -69,7 +71,7 @@ if (!isset($_SESSION["iduser"])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="css/.css">
-    <link rel="stylesheet" type="text/css" href="./css/home2.css">
+    <link rel="stylesheet" type="text/css" href="./css/home.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -96,6 +98,10 @@ if (!isset($_SESSION["iduser"])) {
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>';
 }?>
+
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+<div class="contenedorfoto">
+<input type="submit"  class="material-icons iconosfoto botonizquierda"name="dislike" value="thumb_down_off_alt"></input>
 <div class="contenedorCard">
     <div class="card">
       <img class="card-img-top" src="<?php if (isset($urlfoto) && $urlfoto != false) {
@@ -103,51 +109,36 @@ if (!isset($_SESSION["iduser"])) {
     }
     ?>" alt="Card image cap">
       <div class="card-body">
+      
+      
         <p class="card-text"><?php if (isset($urlfoto) && $urlfoto != false) {
-    echo $urlfoto["photoText"];
-}
-?></p>
+    echo "<b>".$urlfoto["username"].": </b>".$urlfoto["photoText"];
+    }
+    ?></p>
+
       </div>
     </div>
 </div>
-
-<!--<div class="contenedorfoto">
-        <form action="<?php /*echo htmlspecialchars($_SERVER["PHP_SELF"]); */?>">
-            <div class="imagencarrousel">
-              <input type="submit"  class="material-icons elementocarrousel botonizquierda"name="dislike" value="keyboard_arrow_left"></input>
-              <img src="<?php /*if (isset($urlfoto) && $urlfoto != false) {
-    echo "./" . $urlfoto["url"];
-}*/
-?>"  class="imagencarrousel2">
-              <input type="submit"  class="material-icons elementocarrousel botonderecha"name="like" value="keyboard_arrow_right"></input>
-            </div>
-        </form>
-
-
-        <div class="textofoto">
-        <?php /*if (isset($urlfoto) && $urlfoto != false) {
-    echo $urlfoto["photoText"];
-}*/
-?>
-        </div>
-</div>-->
-
+<input type="submit"  class="material-icons iconosfoto botonderecha"name="like" value="thumb_up_off_alt"></input>
+  </div>
+</form>
   <!-- Site footer -->
-<footer class="site-footer footer">
-<div class="textofoto">
+<div class="footer">
+<div class="textofooter">
 Copyright © 2021 All Rights Reserved by Imaginest.
 </div>
 
-</footer>
+</div>
 <!-- Modal -->
-<footer class="modal fade" id="popup" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="popup" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalLabel">Sube una foto!</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
       <div class="modal-body">
           <label for="myfile">Selecciona una imagen:</label>
           <input type="file" id="myfile" name="myfile" accept="image/*" class="form-control"><br>
@@ -161,7 +152,7 @@ Copyright © 2021 All Rights Reserved by Imaginest.
       </form>
     </div>
   </div>
-</footer>
+</div>
 
 
 

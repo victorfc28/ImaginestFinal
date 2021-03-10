@@ -9,7 +9,7 @@
   }
   $fileName = hash('sha256', $_FILES["myfile"]["name"]).rand(); //Farem un hash al nom del fitxer i li concatenarem un rand
   $fileInfo = pathinfo($_FILES["myfile"]["name"]);
-  $fileLocation = "uploads/" . $fileName . "." . $fileInfo['extension'];
+  $fileLocation = "../uploads/" . $fileName . "." . $fileInfo['extension'];
   $res = move_uploaded_file($_FILES["myfile"]["tmp_name"],$fileLocation); //Mourem el fitxer a uploads i li concatenarem el hash amb l'extensió del fitxer
   if($res){
       require_once("./database_connect.php");
@@ -20,7 +20,7 @@
                     ':photoText' => $photoText,
                     ':likes' => 0,
                     ':dislikes' => 0,
-                    ':link' => "uploads/" . $fileName . "." . $fileInfo['extension'],
+                    ':link' => "../uploads/" . $fileName . "." . $fileInfo['extension'],
                     ':iduser' =>  $_SESSION["iduser"]
                 ));
                 if($insert){

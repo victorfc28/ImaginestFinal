@@ -35,14 +35,14 @@
                                 //Si s'ha actualitzat farem l'enviament del correu de confirmació
                                 require_once("./resetPassMailSend.php");
                                 //Farem la redirecció a la pàgina principal
-                                header('Location: ./index.php?sent');
+                                header('Location: ../index.php?sent');
                                 exit;
                             }else{
                                 print_r($db->errorinfo());
                             }
                         }
                     }else{
-                        header('Location: ./index.php?redirected');
+                        header('Location: ../index.php?redirected');
                         exit;
                     }
                 }
@@ -50,7 +50,7 @@
                 echo 'Error con la BDs: ' . $e->getMessage();
             }
         }else{
-            header('Location: ./index.php?redirected');
+            header('Location: ../index.php?redirected');
             exit;
         }
     }
