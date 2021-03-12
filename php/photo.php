@@ -1,76 +1,24 @@
 <?php
 session_start();
+$fotoencontrada=false;
 if (!isset($_SESSION["iduser"])) {
     header("Location: ../index.php?redirected");
     exit;
 } else {
     require_once "./database_connect.php";
-    if (isset($_COOKIE["logged"]) && $_COOKIE["logged"] == 0) {
-        $sql = "SELECT count(*) FROM photos WHERE iduser=:iduser";
-        $fotos = $db->prepare($sql);
-        $fotos->execute(array(
-            ':iduser' => $_SESSION["iduser"],
-        ));
-        $numfotos = $fotos->fetch(PDO::FETCH_ASSOC);
-        if ($numfotos["count(*)"] > 0) {
-            //$sql = "SELECT url,photoText FROM photos WHERE iduser=:iduser ORDER BY publishDate DESC LIMIT 1";
-            $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser WHERE users.iduser=:iduser ORDER BY publishDate DESC LIMIT 1";
-            $ultimafoto = $db->prepare($sql);
-            $ultimafoto->execute(array(
-                ':iduser' => $_SESSION["iduser"],
-            ));
-            $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-
-            $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardar la URL de la foto en la variable de sesion lastPhoto
-            $textofoto = $urlfoto["photoText"];
-            buscarhashtags($textofoto);
-            setcookie('logged', 1, time() + 3600247); //Modificarem la cookie per saber que l'usuari ja ha accedit anteriorment
-        } else {
-            $_SESSION["lastPhoto"] = null;
-            $numfotos = 0;
-            setcookie('logged', 1, time() + 3600247);
-        }
-    } else if (isset($_COOKIE["logged"]) && $_COOKIE["logged"] == 1) {
-        //Comprobarem el número de fotos penjades
-        $sql = "SELECT count(*) as Total FROM photos;";
-        $countfotos = $db->query($sql);
-        if ($countfotos) {
-            foreach ($countfotos as $fila) {
-                $numfotos = $fila['Total'];
-            }
-        }
-
-        //$sql = "SELECT url,photoText FROM photos ORDER BY RAND() LIMIT 1;";
-        if ($numfotos != 0) {
-            $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
-            $ultimafoto = $db->prepare($sql);
-            $ultimafoto->execute(array(
-                ':iduser' => $_SESSION["iduser"],
-            ));
-            $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-            $textofoto = $urlfoto["photoText"];
-            buscarhashtags($textofoto);
-            if ($urlfoto != false && $numfotos > 1) {
-                while ($_SESSION["lastPhoto"] == $urlfoto["url"]) {
-                    $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
-                    $ultimafoto = $db->prepare($sql);
-                    $ultimafoto->execute(array(
-                        ':iduser' => $_SESSION["iduser"],
+    $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser WHERE photos.url = :url";
+                    $foto = $db->prepare($sql);
+                    $foto->execute(array(
+                        ':url' => $_GET["url"],
                     ));
-                    $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-                }
-                $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardar la URL de la foto en la variable de sesion lastPhoto
-                $textofoto = $urlfoto["photoText"];
-                buscarhashtags($textofoto);
-            }
-        } else {
+                    $contenidofoto = $foto->fetch(PDO::FETCH_ASSOC);
+                    if($contenidofoto!=false)
+                    {
+                        $textofoto = $contenidofoto["photoText"];
+                        buscarhashtags($textofoto);
+                        $fotoencontrada=true;
+                    }
 
-        }
-
-    }
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include_once "./photoShare.php";
-    }
 }
 
 function buscarhashtags(&$textofoto)
@@ -94,7 +42,7 @@ function buscarhashtags(&$textofoto)
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="../images/icons/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="../css/.css">
-    <link rel="stylesheet" type="text/css" href="../css/home.css">
+    <link rel="stylesheet" type="text/css" href="../css/foto.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -104,7 +52,7 @@ function buscarhashtags(&$textofoto)
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto:wght@100&display=swap" rel="stylesheet"> 
     <style>
     <?php
-if ($numfotos == 0) {
+if ($fotoencontrada == false) {
     echo '
 
       .contenedorfoto{
@@ -145,47 +93,24 @@ if ($numfotos == 0) {
 </div>';
 }?>
 
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 <div class="contenedorfoto">
-<?php if ($numfotos != 0) {
-    echo '<input type="submit"  class="material-icons iconosfoto botonizquierda"name="dislike" value="thumb_down_off_alt"></input>';
-}
-?>
 <div class="contenedorCard">
     <div class="card">
-      <img class="card-img-top" src="<?php if (isset($urlfoto) && $urlfoto != false) {
-    echo  $urlfoto["url"];
+      <img class="card-img-top" src="<?php if (isset( $_GET["url"]) && $fotoencontrada) {
+    echo  $_GET["url"];
 }
 ?>" >
       <div class="card-body">
-
-
-        <p class="card-text"><?php if (isset($urlfoto) && $urlfoto != false) {
-    echo "<b>" . $urlfoto["username"] . ": </b>" . $textofoto;
+        <p class="card-text"><?php if (isset( $_GET["url"]) && $fotoencontrada) {
+    echo "<b>" . $contenidofoto["username"] . ": </b>" . $textofoto;
 }
 ?></p>
 
       </div>
     </div>
 </div>
-<?php if ($numfotos != 0) {
-    echo '<input type="submit"  class="material-icons iconosfoto botonderecha"name="like" value="thumb_up_off_alt"></input>';
-}
-?>
-  </div>
-</form>
-<?php
-if ($numfotos == 0) {
-    echo '
-
-  <div class="nophoto">
-  <p class="nophototext">No hemos encontrado ninguna foto.</p>
   </div>
 
-  ';
-}
-
-?>
 
   <!-- Site footer -->
 <div class="footer">

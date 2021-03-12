@@ -75,11 +75,9 @@ a:hover {
 }
 
 .contenedorfoto{
-  display: flex;
-  flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 125px;
 }
 .iconosfoto{
   width: 50px;

@@ -1,6 +1,7 @@
 <?php
 session_start();
 $direccionfotos="";
+$nombreUsuario="";
 if (!isset($_SESSION["iduser"])) {
     header("Location: ../index.php?redirected");
     exit;
@@ -8,18 +9,28 @@ if (!isset($_SESSION["iduser"])) {
 else
 {
     
-    if(isset($_GET["hashtag"]))buscarfotoshashtag($direccionfotos);
+    buscarfotosperfil($direccionfotos,$nombreUsuario);
 }
 
-function buscarfotoshashtag(&$direccionfotos)
+function buscarfotosperfil(&$direccionfotos,&$nombreUsuario)
 {
+  
   require_once "./database_connect.php";
-  $sql = "SELECT photos.url from te INNER JOIN photos on te.photoID = photos.photoID WHERE tagName = :tag";
-  $fotostag = $db->prepare($sql);
-  $fotostag->execute(array(
-      ':tag' => "#".$_GET["hashtag"],
+  $sql = "SELECT url from photos where iduser=:id";
+  $fotosuser = $db->prepare($sql);
+  $fotosuser->execute(array(
+      ':id' => $_SESSION["iduser"]
   ));
-  foreach($fotostag as $foto)
+
+  $sql = "SELECT username from users where iduser=:id";
+  $user = $db->prepare($sql);
+  $user->execute(array(
+      ':id' => $_SESSION["iduser"]
+  ));
+  $usern = $user->fetch(PDO::FETCH_ASSOC);
+  $nombreUsuario = $usern["username"];
+  
+  foreach($fotosuser as $foto)
   {
     $direccionfotos= $direccionfotos."|".$foto[0];
   }
@@ -56,7 +67,6 @@ function buscarfotoshashtag(&$direccionfotos)
       <i class="material-icons nav__icon">person</i>
     </a>
     <ul class="dropdown-menu " aria-labelledby="dropdownMenuLink">
-    <li><a class="dropdown-item" href="./perfil.php">Mi perfil</a></li>
     <li><a class="dropdown-item" href="#">Configuración</a></li>
     <li><a class="dropdown-item" href="./logout.php">Cerrar Sesión</a></li>
   </ul>
@@ -67,12 +77,12 @@ function buscarfotoshashtag(&$direccionfotos)
 
 <?php
 
-if(isset($_GET["hashtag"]) && $_GET["hashtag"]!="")
+if($_SESSION["iduser"])
 {
     echo '
 
     <div class="titulo">
-    <p>'."#".$_GET["hashtag"].'</p>
+    <p>'.$nombreUsuario.'</p>
     </div>
   
     ';
@@ -81,7 +91,7 @@ if(isset($_GET["hashtag"]) && $_GET["hashtag"]!="")
 <div class="contenedorgrid">
     <div class="contenedortabla">
     <?php
-    if(isset($direccionfotos) && isset($_GET["hashtag"]))
+    if(isset($direccionfotos))
     {
       $contadorfilas=0;
       echo'<div class="fila">';
@@ -101,6 +111,31 @@ if(isset($_GET["hashtag"]) && $_GET["hashtag"]!="")
     }
 
     ?>
+        <!--<div class="fila">
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+        </div>
+        <div class="fila">
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+        </div>
+        <div class="fila">
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+        </div>
+        <div class="fila">
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+        </div>
+        <div class="fila">
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+            <img class="imagengrid"src="../uploads/01f0a7d8dada6e5264a9ca1f9543cdbd103bf5d702c39a5fe512caa498cfb6f91588994820.png" >
+        </div>-->
     </div>
 </div>
 

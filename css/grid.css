@@ -1,0 +1,54 @@
+.titulo{
+    text-align: center;
+    margin-top: 75px;
+    font-family: 'Lato', sans-serif;
+    font-size: 3em;
+    color: #797979;
+
+  }
+.contenedorgrid{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.contenedortabla
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    margin-bottom: 75px;
+}
+.imagengrid:hover {
+    filter: blur(5px);
+    transition: 750ms;
+}
+.imagengrid
+{
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    margin: 5px;
+    transition: 750ms;
+}
+
+.fila{
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+}
+
+@media only screen and (max-width: 600px) {
+        .imagengrid
+        {
+            width: 250px;
+            object-fit: cover;
+        }
+        .fila
+        {
+            flex-direction: column;
+        }
+    }
