@@ -87,7 +87,7 @@ a:hover {
 }
 }
 
-@media only screen and (min-width: 1030px) {
+@media only screen and (min-width: 1000px) {
 
   .logo{
     margin-left: 200px;
@@ -97,7 +97,7 @@ a:hover {
   }
 
   .card{
-    width: 30rem;
+    width: 50rem;
   }
 
   }
@@ -164,7 +164,34 @@ a:hover {
       margin-top: 10px;
     }
     }
-
+    @media only screen and (min-width: 750px) {
+      .botonizquierda{
+        margin-left: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        transition: 0.3s;
+      }
+      .botonderecha{
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        transition: 0.3s;
+      }
+      .botonderecha:hover{
+        color: red;
+        transition: 0.3s;
+      }
+      .botonizquierda:hover{
+        color: yellow;
+        transition: 0.3s;
+      }
+      .card{
+        width: 40rem;
+      }
+      .textofooter{
+        margin-top: 10px;
+      }
+      }
 /*textofoto*/
   
 .card-body{
@@ -188,8 +215,10 @@ a:hover {
 
 
 .footer {
-  position: absolute;
-  bottom: 0px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  
   width: 100%;
   height: 50px!important;
   background-color: inherit;
