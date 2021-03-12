@@ -23,9 +23,11 @@ if (!isset($_SESSION["iduser"])) {
 
             $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardar la URL de la foto en la variable de sesion lastPhoto
             $textofoto = $urlfoto["photoText"];
+            buscarhashtags($textofoto);
             setcookie('logged', 1, time() + 3600247); //Modificarem la cookie per saber que l'usuari ja ha accedit anteriorment
         } else {
             $_SESSION["lastPhoto"] = null;
+            $numfotos = 0;
             setcookie('logged', 1, time() + 3600247);
         }
     } else if (isset($_COOKIE["logged"]) && $_COOKIE["logged"] == 1) {
@@ -47,6 +49,7 @@ if (!isset($_SESSION["iduser"])) {
             ));
             $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
             $textofoto = $urlfoto["photoText"];
+            buscarhashtags($textofoto);
             if ($urlfoto != false && $numfotos > 1) {
                 while ($_SESSION["lastPhoto"] == $urlfoto["url"]) {
                     $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
@@ -72,7 +75,13 @@ if (!isset($_SESSION["iduser"])) {
 
 function buscarhashtags(&$textofoto)
 {
-    $textoTemporal = explode("#", $textofoto);
+    //$textoTemporal = explode("#", $textofoto);
+    $qttHashtag = preg_match_all('/#(\w)*/', $textofoto, $matches);
+    
+    foreach ($matches[0] as $tag) {
+      $replace = '<a class="linkhashtag"href="#">'.$tag.'</a>';
+      $textofoto = str_replace($tag, $replace, $textofoto);
+    }
 }
 ?>
 <!DOCTYPE html>
