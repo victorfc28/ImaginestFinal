@@ -1,6 +1,6 @@
 <?php
     if(isset($_SESSION["iduser"])){
-        header('Location: ./home.php');
+        header('Location: ../home.php');
         exit;
     }else if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(isset($_POST["userEmailReset"])){

@@ -133,7 +133,7 @@ if ($numfotos == 0) {
     </a>
     <ul class="dropdown-menu " aria-labelledby="dropdownMenuLink">
     <li><a class="dropdown-item" href="./perfil.php">Mi perfil</a></li>
-    <li><a class="dropdown-item" href="#">Configuración</a></li>
+    <li><a class="dropdown-item" href="./account_settings.php">Configuración</a></li>
     <li><a class="dropdown-item" href="./logout.php">Cerrar Sesión</a></li>
   </ul>
   </div>

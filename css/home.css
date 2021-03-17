@@ -91,6 +91,9 @@ a:hover {
 .card{
   width: 18rem;
 }
+.contenedortextofoto{
+  margin-left: 3%;
+}
 }
 
 @media only screen and (min-width: 1000px) {
@@ -105,7 +108,9 @@ a:hover {
   .card{
     width: 50rem;
   }
-
+  .alerta{
+    margin-top: 7%!important;
+  }
   }
 
 
@@ -129,7 +134,7 @@ a:hover {
     transition: 0.3s;
   }
   .botonizquierda:hover{
-    color: yellow;
+    color: #9053c7;
     transition: 0.3s;
   }
   .botonderecha{
@@ -138,8 +143,16 @@ a:hover {
     transition: 0.3s;
   }
   .botonderecha:hover{
-    color: red;
+    color: #9053c7;
+
     transition: 0.3s;
+  }
+
+  .alerta{
+    margin-top: 18%!important;
+  }
+  .contenedortextofoto{
+    margin-left: 3%;
   }
   }
   @media only screen and (min-width: 601px) {
@@ -156,18 +169,26 @@ a:hover {
       transition: 0.3s;
     }
     .botonderecha:hover{
-      color: red;
+      color: #9053c7;
+
       transition: 0.3s;
     }
     .botonizquierda:hover{
-      color: yellow;
+      color: #9053c7;
       transition: 0.3s;
     }
     .card{
       width: 30rem;
+      margin-bottom: 100px;
     }
     .textofooter{
       margin-top: 10px;
+    }
+    .alerta{
+      margin-top: 15%!important;
+    }
+    .contenedortextofoto{
+      margin-left: 3%;
     }
     }
     @media only screen and (min-width: 750px) {
@@ -184,11 +205,11 @@ a:hover {
         transition: 0.3s;
       }
       .botonderecha:hover{
-        color: red;
+        color: #9053c7;
         transition: 0.3s;
       }
       .botonizquierda:hover{
-        color: yellow;
+        color: #9053c7;
         transition: 0.3s;
       }
       .card{
@@ -200,7 +221,15 @@ a:hover {
       .textofooter{
         margin-top: 10px;
       }
+      .alerta{
+        margin-top: 10%!important;
       }
+      }
+      @media only screen and (min-width: 1100px) {
+        .alerta{
+          margin-top: 5%!important;
+        }
+        }
 /*textofoto*/
   
 .card-body{
@@ -251,4 +280,36 @@ a:hover {
 
 .linkhashtag{
   color:rgb(0, 68, 255)!important;
+}
+
+.contenedorlikes
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.contenedortextofoto{
+  margin-left: 1%;
+}
+.iconosfoto2
+{
+  background-color: inherit;
+  width: 30px;
+  height: 25px;
+  border:0;
+  transition: 0.3s;
+}
+.iconosfoto2:hover
+{
+  color: #9053c7;
+  transition: 0.3s;
+}
+
+.iconosfoto2hover
+{
+  background-color: inherit;
+  width: 30px;
+  height: 25px;
+  border:0;
+  color: #9053c7;
 }

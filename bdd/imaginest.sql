@@ -8,6 +8,7 @@ create table if not exists users(
     passHash varchar(60),
     userFirstName varchar(60),
     userLastName varchar(120),
+    language varchar(3),
     creationDate datetime,
     lastSignIn datetime,
     removeDate datetime,

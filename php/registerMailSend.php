@@ -1,12 +1,12 @@
 <?php
     use PHPMailer\PHPMailer\PHPMailer;
-    require '../vendor/autoload.php';
+    require './vendor/autoload.php';
     $mail = new PHPMailer();
     $mail->CharSet = 'utf-8'; //Indicarem UTF-8 per poder visualitzar d'entre altres els accents
     $mail->IsSMTP();
 
     //Agafarem el contingut de la plantilla HTML
-    $body = file_get_contents("emailTemplate.html");
+    $body = file_get_contents("./templates/registerEmailTemplate.html");
     //Ara declarem els arrays per després reemplaçar-los
     $array1 = array("((code))","((mail))");
     $array2 = array($activationCode,$userEmail);

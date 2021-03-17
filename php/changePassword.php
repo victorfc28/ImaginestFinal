@@ -1,6 +1,6 @@
 <?php
     if(isset($_SESSION["iduser"])){
-        header('Location: ./home.php');
+        header('Location: ../home.php');
         exit;
     }else if($_SERVER["REQUEST_METHOD"] == "POST"){
 		if(isset($_POST["secretUserEmail"]) && isset($_POST["secretPass"])){
@@ -31,5 +31,8 @@
 					echo 'Error con la BDs: ' . $e->getMessage();
 			}
 		}
-    }
+    }else{
+		header('Location: ../index.php?redirected');
+		exit;
+	}
 ?>

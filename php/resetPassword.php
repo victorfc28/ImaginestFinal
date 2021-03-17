@@ -1,54 +1,65 @@
 <?php
     if(isset($_SESSION["iduser"])){
-        header('Location: ./home.php');
+        header('Location: ../home.php');
         exit;
 	}else if(isset($_GET["code"]) && isset($_GET["mail"])){
-        //Comprovem si el codi i el correu són correctes
-        require_once("./database_connect.php");
-        try{
-            $sql = "SELECT resetPassCode,resetPassExpiry FROM `users` WHERE resetPassCode=:code AND mail=:mail";
-            $usuaris = $db->prepare($sql);
-            $usuaris->execute(array(
-                ':code' => $_GET["code"],
-                ':mail' => $_GET["mail"]
-            ));
-            if($usuaris){
-                $count = $usuaris->rowcount();
-                if($count==1){
-                    //Comprovarem si el codi es vàlid i si ha expirat
-                   	foreach ($usuaris as $fila) {
-						if($fila['resetPassCode']==$_GET["code"]){
-							$expiryTime = $fila['resetPassExpiry'];
-							if(strtotime("now")>(strtotime($expiryTime))){
-								//En cas que hagi expirat tornarem a la pàgina principal
-								header('Location: ./index.php?expired');
-            					exit;
+        	//Comprovem si el codi i el correu són correctes
+        	require_once("./database_connect.php");
+        	try{
+            	$sql = "SELECT resetPassCode,resetPassExpiry FROM `users` WHERE resetPassCode=:code AND mail=:mail";
+            	$usuaris = $db->prepare($sql);
+            	$usuaris->execute(array(
+                	':code' => $_GET["code"],
+                	':mail' => $_GET["mail"]
+           	 	));
+            	if($usuaris){
+                	$count = $usuaris->rowcount();
+                	if($count==1){
+                    	//Comprovarem si el codi es vàlid i si ha expirat
+                   		foreach ($usuaris as $fila) {
+							if($fila['resetPassCode']==$_GET["code"]){
+								$expiryTime = $fila['resetPassExpiry'];
+								if(strtotime("now")>(strtotime($expiryTime))){
+									//En cas que hagi expirat tornarem a la pàgina principal
+									header('Location: ./index.php?expired');
+            						exit;
+								}
+							}else{
+								header('Location: ../index.php?redirected');
+								exit;
 							}
-						}else{
-							header('Location: ../index.php?redirected');
-							exit;
 						}
+					}else{
+						header('Location: ../index.php?redirected');
+						exit;
 					}
-				}else{
+            	}else{
 					header('Location: ../index.php?redirected');
 					exit;
 				}
-            }else{
-				header('Location: ../index.php?redirected');
-				exit;
-			}
-        }catch(PDOException $e){
-            echo 'Error con la BDs: ' . $e->getMessage();
-        }
+        	}catch(PDOException $e){
+            	echo 'Error con la BDs: ' . $e->getMessage();
+        	}
+    	}else{
+        	header('Location: ../index.php?redirected');
+        	exit;
+	}
+
+	if(!isset($_COOKIE['idioma'])){
+		//Idioma per defecte
+		setcookie('idioma','es',time() + 3600*24*7);
+        $idioma = 'es';
     }else{
-        header('Location: ../index.php?redirected');
-        exit;
+        //Carreguem l'idioma de la cookie
+        $idioma = $_COOKIE['idioma']; 
     }
+	//Carregarem el fitxer d'idiomes
+    require_once("../langs/lang-".$idioma.".php");
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang=<?php echo "$idioma"?>>
 <head>
-	<title>imagiNest - Restablecer contraseña</title>
+	<title>imagiNest - <?php echo IDIOMES['RESETPASSWORD']; ?></title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -92,7 +103,7 @@
 				<!-- Els camps ja son requerits per defecte a la plantilla, ja que mostra a l'usuari que ha d'introduïr -->
 				<form class="login100-form validate-form" action="<?php echo htmlspecialchars("./changePassword.php");?>" method="POST" onsubmit="return verifyPass()">
 					<span class="login100-form-title">imagiNest</span>
-					<span class="login100-form-text">Restablecer contraseña</span>
+					<span class="login100-form-text"><?php echo IDIOMES['RESETPASSWORD']; ?></span>
 					<div class="wrap-input100">
 						<input id="userEmail" class="input100" type="text" name="userEmail" value="<?php echo $_GET["mail"]?>" maxlength="40" readonly>
 						<span class="focus-input100"></span>
@@ -101,27 +112,27 @@
 							<i class="fa fa-envelope" aria-hidden="true"></i>
 						</span>
 					</div>
-					<div class="wrap-input100 validate-input" data-validate="Introduce una nueva contraseña">
-						<input id="pass" class="input100" type="password" name="pass" placeholder="Nueva contraseña*">
+					<div class="wrap-input100 validate-input" data-validate="<?php echo IDIOMES['NEWPASSWORD_TEXT']; ?>">
+						<input id="pass" class="input100" type="password" name="pass" placeholder="<?php echo IDIOMES['NEWPASSWORD']; ?>">
 						<span class="focus-input100"></span>
 						<input id="secretPass" type="hidden" name="secretPass">
 						<span class="symbol-input100">
 							<i class="fa fa-lock" aria-hidden="true"></i>
 						</span>
 					</div>
-					<div class="wrap-input100 validate-input" data-validate="Vuelve a introducir la nueva contraseña">
-						<input id="passVerify" class="input100" type="password" name="passVerify" placeholder="Verificar nueva contraseña*">
+					<div class="wrap-input100 validate-input" data-validate="<?php echo IDIOMES['REPEATNEWPASS_TEXT']; ?>">
+						<input id="passVerify" class="input100" type="password" name="passVerify" placeholder="<?php echo IDIOMES['REPEATNEWPASS']; ?>">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-lock" aria-hidden="true"></i>
 						</span>
 					</div>
                     <div class="container-login100-form-btn">
-						<button class="login100-form-btn">Restablecer contraseña</button>
+						<button class="login100-form-btn"><?php echo IDIOMES['RESETPASSWORD_BUTTON']; ?></button>
 					</div>
                     <div class="text-center p-t-136">
-						<span class="txt1">¿Tienes cuenta imagiNest?</span>
-						<a class="txt2" href="./index.php">¡Inicia sesión!<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a>
+						<span class="txt1"><?php echo IDIOMES['HAVEACCOUNT']; ?></span>
+						<a class="txt2" href="../index.php"><?php echo IDIOMES['LOGIN_BUTTON2']; ?><i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a>
 					</div>
 				</form>
 				<script>

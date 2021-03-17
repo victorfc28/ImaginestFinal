@@ -1,6 +1,6 @@
 <?php
     if(isset($_SESSION["iduser"])){
-        header('Location: ./home.php');
+        header('Location: ../home.php');
         exit;
     }else{
         if(isset($_GET["code"]) && isset($_GET["mail"])){

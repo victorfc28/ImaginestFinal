@@ -139,6 +139,9 @@ a:hover {
     color: red;
     transition: 0.3s;
   }
+  .contenedortextofoto{
+    margin-left: 3%;
+  }
   }
   @media only screen and (min-width: 601px) {
     .botonizquierda{
@@ -228,7 +231,7 @@ a:hover {
   
   width: 100%;
   height: 50px!important;
-  background-color: inherit;
+  background-color: rgb(245, 245, 245)!important;
   color: #26272b;
   text-align: center;
   border-top: 1px solid rgb(209, 209, 209);
@@ -247,6 +250,38 @@ a:hover {
   color: #797979;
 }
 
+.contenedorlikes
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.contenedortextofoto{
+  margin-left: 1%;
+}
 .linkhashtag{
   color:rgb(0, 68, 255)!important;
+}
+
+.iconosfoto2
+{
+  background-color: inherit;
+  width: 30px;
+  height: 25px;
+  border:0;
+  transition: 0.3s;
+}
+.iconosfoto2:hover
+{
+  color: #9053c7;
+  transition: 0.3s;
+}
+
+.iconosfoto2hover
+{
+  background-color: inherit;
+  width: 30px;
+  height: 25px;
+  border:0;
+  color: #9053c7;
 }

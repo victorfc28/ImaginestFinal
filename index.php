@@ -1,11 +1,23 @@
 <?php
 	session_start();
 	if(isset($_SESSION["iduser"])){
-		header('Location: ./php/home.php');
+		header('Location: ./home.php');
 		exit;
 	}
+	if(!isset($_COOKIE['idioma'])){
+		//Idioma per defecte
+		setcookie('idioma','es',time() + 3600*24*7);
+        $idioma = 'es';
+    }else{
+        //Carreguem l'idioma de la cookie
+        $idioma = $_COOKIE['idioma']; 
+    }
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
-        if(isset($_POST["secretUserEmail"]) && isset($_POST["secretPass"])){
+		if(isset($_POST["idioma"])){
+            //Actualitzem cookie i carreguem idioma
+            setcookie('idioma',$_POST['idioma'],time() + 3600*24*7);
+            $idioma = $_POST['idioma'];
+        }else if(isset($_POST["secretUserEmail"]) && isset($_POST["secretPass"])){
             $userEmail = utf8_encode(base64_decode($_POST["secretUserEmail"]));
 			$password = utf8_encode(base64_decode($_POST["secretPass"]));
 
@@ -13,9 +25,11 @@
 			require_once("./php/user_login.php");
 		}
 	}
+	//Carregarem el fitxer d'idiomes
+    require_once("./langs/lang-".$idioma.".php");
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang=<?php echo "$idioma"?>>
 <head>
 	<title>imagiNest - Login</title>
 	<meta charset="UTF-8">
@@ -47,34 +61,37 @@
 				-webkit-background-size: cover;
 				-o-background-size: cover;
 			}";
-		?> 
+		?>
 	</style>
 </head>
 <body>
 	<?php
 		if(isset($_GET["registered"])){
-			echo '<script>alert("Usuario registrado correctamente")</script>';
+			echo '<script>alert("' . IDIOMES['REGISTERED_ALERT'] .'")</script>';
 		}
 		else if(isset($_GET["logout"])){
-			echo '<script>alert("Has cerrado sesión correctamente")</script>';
+			echo '<script>alert("' . IDIOMES['LOGOUT_ALERT'] .'")</script>';
 		}
 		else if(isset($_GET["verified"])){
-			echo '<script>alert("La cuenta se ha verificado correctamente")</script>';
+			echo '<script>alert("' . IDIOMES['VERIFIED_ALERT'] .'")</script>';
+		}
+		else if(isset($_GET["deactivate"])){
+			echo '<script>alert("' . IDIOMES['DEACTIVATE_ALERT'] .'")</script>';
 		}
 		else if(isset($_GET["sent"])){
-			echo '<script>alert("Se ha enviado un email para poder restablecer la contraseña")</script>';
+			echo '<script>alert("' . IDIOMES['SENT_ALERT'] .'")</script>';
 		}
 		else if(isset($_GET["expired"])){
-			echo '<script>alert("El enlace para restablecer la contraseña ha expirado")</script>';
+			echo '<script>alert("' . IDIOMES['EXPIRED_ALERT'] .'")</script>';
 		}
 		else if(isset($_GET["passChanged"])){
-			echo '<script>alert("Se ha restablecido la contraseña correctamente")</script>';
+			echo '<script>alert("' . IDIOMES['PASSCHANGED_ALERT'] .'")</script>';
 		}
         else if(isset($error) && $error==2){
-            echo '<script>alert("Las credenciales son erróneas, vuelve a iniciar sesión")</script>';
+            echo '<script>alert("' . IDIOMES['INCORRECTLOGIN_ALERT'] .'")</script>';
 		}
 		else if(isset($error) && $error==1){
-			echo '<script>alert("Cuenta inactiva")</script>';
+			echo '<script>alert("' . IDIOMES['INACTIVEUSER_ALERT'] .'")</script>';
 		}
     ?>
 	<div class="limiter">
@@ -87,17 +104,17 @@
 				<!-- Els camps ja son requerits per defecte a la plantilla, ja que mostra a l'usuari que ha d'introduïr -->
 				<form class="login100-form validate-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" onsubmit="return cod_Base64()">
 					<span class="login100-form-title">imagiNest</span>
-					<span class="login100-form-text">Accede a tu cuenta</span>
-					<div class="wrap-input100 validate-input" data-validate="Introduce un email o nombre de usuario válido">
-						<input id="userEmail" class="input100" type="text" name="userEmail" placeholder="Usuario o email" maxlength="40">
+					<span class="login100-form-text"><?php echo IDIOMES['ACCOUNTACCESS_TITLE']; ?></span>
+					<div class="wrap-input100 validate-input" data-validate="<?php echo IDIOMES['MAILUSER_TEXT']; ?>">
+						<input id="userEmail" class="input100" type="text" name="userEmail" placeholder="<?php echo IDIOMES['USEREMAIL']; ?>" maxlength="40">
 						<span class="focus-input100"></span>
 						<input id="secretUserEmail" type="hidden" name="secretUserEmail">
 						<span class="symbol-input100">
 							<i class="fa fa-envelope" aria-hidden="true"></i>
 						</span>
 					</div>
-					<div class="wrap-input100 validate-input" data-validate="Introduce la contraseña">
-						<input id="pass" class="input100" type="password" name="pass" placeholder="Contraseña">
+					<div class="wrap-input100 validate-input" data-validate="<?php echo IDIOMES['PASSWORD_TEXT']; ?>">
+						<input id="pass" class="input100" type="password" name="pass" placeholder="<?php echo IDIOMES['PASSWORD']; ?>">
 						<span class="focus-input100"></span>
 						<input id="secretPass" type="hidden" name="secretPass">
 						<span class="symbol-input100">
@@ -105,15 +122,17 @@
 						</span>
 					</div>
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">Iniciar sesión</button>
+						<button class="login100-form-btn"><?php echo IDIOMES['LOGIN_BUTTON']; ?></button>
 					</div>
 					<div class="text-center p-t-12">
-						<span class="txt1">¿Has olvidado</span>
-						<a class="txt2" href="#" data-toggle="modal" data-target="#exampleModalCenter">tu usuario/email o contraseña?</a>
+						<span class="txt1"><?php echo IDIOMES['LOSTPASSWORD1']; ?></span>
+						<a class="txt2" href="#" data-toggle="modal" data-target="#exampleModalCenter"><?php echo IDIOMES['LOSTPASSWORD2']; ?></a>
 					</div>
 					<div class="text-center p-t-136">
-						<span class="txt1">¿No tienes cuenta imagiNest?</span>
-						<a class="txt2" href="./php/register.php">¡Regístrate!<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a>
+						<span class="txt1"><?php echo IDIOMES['NOACCOUNT']; ?></span>
+						<a class="txt2" href="./register.php"><?php echo IDIOMES['REGISTER_BUTTON']; ?><i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a><br>
+						<span class="txt1"><?php echo IDIOMES['CHANGELANGUAGE_BUTTON']; ?></span>
+						<a class="txt2" href="#" data-toggle="modal" data-target="#exampleModalCenter2"><?php echo IDIOMES['CHANGE']; ?><i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i></a>
 					</div>
 				</form>
 				<script>
@@ -129,7 +148,7 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLongTitle">¿Has olvidado tu contraseña?</h5>
+								<h5 class="modal-title" id="exampleModalLongTitle"><?php echo IDIOMES['LOSTPASSWORD_TITLE']; ?></h5>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
           							<span aria-hidden="true">&times;</span>
         						</button>
@@ -137,10 +156,10 @@
 							<form action="<?php echo htmlspecialchars("./php/resetPasswordSend.php");?>" method="POST">
       							<div class="modal-body">
 									<span class="login100-form-title">imagiNest</span>
-									<span class="login100-form-text">Restablecer contraseña</span>
-									<p>Introduce tu nombre de usuario o dirección de correo electrónico para restablecer la contraseña</p>
+									<span class="login100-form-text"><?php echo IDIOMES['RESETPASSWORD_TITLE']; ?></span>
+									<p><?php echo IDIOMES['USERNAMEMAIL_RESET']; ?></p>
 									<div class="wrap-input100">
-										<input id="userEmailReset" class="input100" type="text" name="userEmailReset" placeholder="Usuario o email" maxlength="40" required>
+										<input id="userEmailReset" class="input100" type="text" name="userEmailReset" placeholder="<?php echo IDIOMES['USERORMAIL']; ?>" maxlength="40" required>
 											<span class="focus-input100"></span>
 											<span class="symbol-input100">
 												<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -148,11 +167,42 @@
 									</div>	
 								</div>
       							<div class="modal-footer">
-        							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        							<button type="submit" class="btn btn-primary">Restablecer contraseña</button>
+        							<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo IDIOMES['CLOSE_BUTTON']; ?></button>
+        							<button type="submit" class="btn btn-primary"><?php echo IDIOMES['RESETPASSWORD_BUTTON']; ?></button>
       							</div>
 							</form>
     					</div>
+  					</div>
+				</div>
+
+				<!-- Pop up per canviar l'idioma -->
+				<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLongTitle"><?php echo IDIOMES['CHANGELANGUAGE_TITLE']; ?></h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          							<span aria-hidden="true">&times;</span>
+        						</button>
+      						</div>
+							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
+								<div class="modal-body">
+									<span class="login100-form-title">imagiNest</span>
+									<span class="login100-form-text"><?php echo IDIOMES['CHANGELANGUAGE_TITLE']; ?></span>
+									<div class="wrap-input100">
+										<select name="idioma" id="idioma">
+            								<option value="cat" <?php echo $idioma=='cat' ? "selected" : ""; ?>>Català</option>
+            								<option value="es" <?php echo $idioma=='es' ? "selected" : ""; ?>>Castellano</option>
+            								<option value="en" <?php echo $idioma=='en' ? "selected" : ""; ?>>English</option>
+        								</select>
+									</div>
+								</div>
+								<div class="modal-footer">
+        							<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo IDIOMES['CLOSE_BUTTON']; ?></button>
+        							<button type="submit" class="btn btn-primary"><?php echo IDIOMES['CHANGE2']; ?></button>
+      							</div>
+    						</form>
+						</div>
   					</div>
 				</div>
 			</div>
