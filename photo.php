@@ -18,7 +18,7 @@ if(!isset($_SESSION["iduser"])){
   if($contenidofoto!=false)
   {
     $textofoto = $contenidofoto["photoText"];
-    buscarhashtags($textofoto);
+    include_once "./php/findHashtags.php";
 
     $fotoencontrada=true;
     $sql = "SELECT likes, dislikes from photos WHERE url = :url;";
@@ -65,25 +65,12 @@ if(!isset($_SESSION["iduser"])){
 
   if($_SERVER["REQUEST_METHOD"] == "POST"){
     //Adjuntarem el fitxer per penjar les fotos
-    if(isset($_POST["like"])) include_once "./php/likephoto.php";
-    if(isset($_POST["dislike"])) include_once "./php/dislikephoto.php";   
+    if(isset($_POST["like"])) include_once "./php/like.php";
+    if(isset($_POST["dislike"])) include_once "./php/dislike.php";   
 }
 
   //Carregarem el fitxer d'idiomes
   require_once("./langs/lang-".$idioma.".php");
-}
-
-function buscarhashtags(&$textofoto)
-{
-    //$textoTemporal = explode("#", $textofoto);
-    $qttHashtag = preg_match_all('/#(\w)*/', $textofoto, $matches);
-    
-    foreach ($matches[0] as $tag) {
-      $tag2 = $tag;
-      $tag2 = str_replace("#","",$tag);
-      $replace = '<a class="linkhashtag"href="./hashtag.php?hashtag='.$tag2.'">'.$tag.'</a>';
-      $textofoto = str_replace($tag, $replace, $textofoto);
-    }
 }
 
 

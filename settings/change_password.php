@@ -57,19 +57,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="../images/icons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="../css/home.css">
+    <link rel="stylesheet" type="text/css" href="../css/settings.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
     <?php if(isset($updated) && $updated==true){
-        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">'.
+        echo '<div class=" alerta alert alert-success alert-dismissible fade show" role="alert">'.
         IDIOMES['CHANGEPASSWORD_SUCCESS']
         .'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
     }else if(isset($updated) && $updated==false){
-        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">'.
+        echo '<div class=" alerta alert alert-danger alert-dismissible fade show" role="alert">'.
         IDIOMES['CHANGEPASSWORD_DANGER']
         .'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
@@ -94,16 +94,26 @@
     <div class="contenedorCard">
         <div class="card">
             <a href="../settings/account_settings.php"><i class="fa fa-arrow-left"></i> <?php echo IDIOMES['BACKSETTINGS']; ?></a>
-            <h2><?php echo IDIOMES['CHANGEPASSWORD']; ?></h2>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" onsubmit="return verifyPass()">
-                <label for="fname"><?php echo IDIOMES['ACTUALPASSWORD']; ?></label><br>
-                <input type="password" id="currentPass" name="currentPass" value="" required><br>
-                <label for="fname"><?php echo IDIOMES['NEWPASSWORD_TEXT']; ?></label><br>
-                <input type="password" id="newPass" name="newPass" value="" required><br>
-                <label for="fname"><?php echo IDIOMES['REPEATNEWPASS_TEXT']; ?></label><br>
-                <input type="password" id="newPass2" name="newPass2" value="" required><br>
-                <input type="submit" value="<?php echo IDIOMES['SAVECHANGES']; ?>">
-            </form>
+            <div class="contenedorOpciones">
+                <h2 class ="tituloOpciones"><?php echo IDIOMES['CHANGEPASSWORD']; ?></h2>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" onsubmit="return verifyPass()">
+                    <div class="filaOpciones">
+                        <label for="fname"><?php echo IDIOMES['ACTUALPASSWORD']; ?></label>
+                        <input type="password" id="currentPass" name="currentPass" value="" required>
+                    </div>
+                    <div class="filaOpciones">
+                        <label for="fname"><?php echo IDIOMES['NEWPASSWORD_TEXT']; ?></label>
+                        <input type="password" id="newPass" name="newPass" value="" required>
+                    </div>
+                    <div class="filaOpciones">
+                        <label for="fname"><?php echo IDIOMES['REPEATNEWPASS_TEXT']; ?></label>
+                        <input type="password" id="newPass2" name="newPass2" value="" required>
+                    </div>
+
+
+                    <input class="opciones btn btn-secondary" type="submit" value="<?php echo IDIOMES['SAVECHANGES']; ?>">
+                </form>
+            </div>
             <script>
 				function verifyPass(){
 					if(document.getElementById('newPass').value == document.getElementById('newPass2').value){

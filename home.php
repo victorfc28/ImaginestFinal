@@ -6,7 +6,7 @@ if (!isset($_SESSION["iduser"])) {
 } else {
     //Carreguem l'idioma de la sessió
     $idioma = $_SESSION["language"];
-
+    $homemode=true;
     require_once "./php/database_connect.php";
     if (isset($_COOKIE["logged"]) && $_COOKIE["logged"] == 0) {
         $sql = "SELECT count(*) FROM photos WHERE iduser=:iduser";
@@ -25,42 +25,10 @@ if (!isset($_SESSION["iduser"])) {
 
             $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardem la URL de la foto en la variable de sessió lastPhoto
             $textofoto = $urlfoto["photoText"];
-            buscarhashtags($textofoto);
+            include_once "./php/findHashtags.php";
             setcookie('logged', 1, time() + 3600247); //Modificarem la cookie per saber que l'usuari ja ha accedit anteriorment
 
-            $sql = "SELECT likes, dislikes from photos WHERE url = :url;";
-            $likesX = $db->prepare($sql);
-            $likesX->execute(array(
-                ':url' => $urlfoto["url"],
-            ));
-            $likesX2 = $likesX->fetch(PDO::FETCH_ASSOC);
-            $likes = $likesX2["likes"];
-            $dislikes = $likesX2["dislikes"];
-
-            //like hover
-            $sql = "SELECT photoID FROM photos WHERE url = :url";
-            $idphotox = $db->prepare($sql);
-            $idphotox->execute(array(
-                ':url' => $urlfoto["url"],
-            ));
-            $idphoto = $idphotox->fetch(PDO::FETCH_ASSOC);
-
-            $idphoto = $idphoto["photoID"];
-
-            $sql = "SELECT * FROM Fa_like WHERE iduser=:iduser AND photoID = :photoid";
-            $likex = $db->prepare($sql);
-            $likex->execute(array(
-                ':iduser' => $_SESSION["iduser"],
-                ':photoid' => $idphoto,
-            ));
-            $like = $likex->fetch(PDO::FETCH_ASSOC);
-            if($like != false)
-            {
-              if($like["likea"] == 1) $likeencontrado=true;
-              else if($like["dislikea"] == 1) $dislikeencontrado=true;
-            }
-
-            //like hover
+            include_once "./php/findInteraccion.php";
 
         } else {
             $_SESSION["lastPhoto"] = null;
@@ -86,43 +54,6 @@ if (!isset($_SESSION["iduser"])) {
             ));
             $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
             $textofoto = $urlfoto["photoText"];
-            buscarhashtags($textofoto);
-
-            $sql = "SELECT likes, dislikes from photos WHERE url = :url;";
-            $likesX = $db->prepare($sql);
-            $likesX->execute(array(
-                ':url' => $urlfoto["url"],
-            ));
-            $likesX2 = $likesX->fetch(PDO::FETCH_ASSOC);
-            $likes = $likesX2["likes"];
-            $dislikes = $likesX2["dislikes"];
-
-            //like hover
-            $sql = "SELECT photoID FROM photos WHERE url = :url";
-            $idphotox = $db->prepare($sql);
-            $idphotox->execute(array(
-                ':url' => $urlfoto["url"],
-            ));
-            $idphoto = $idphotox->fetch(PDO::FETCH_ASSOC);
-
-            $idphoto = $idphoto["photoID"];
-
-            $sql = "SELECT * FROM Fa_like WHERE iduser=:iduser AND photoID = :photoid";
-            $likex = $db->prepare($sql);
-            $likex->execute(array(
-                ':iduser' => $_SESSION["iduser"],
-                ':photoid' => $idphoto,
-            ));
-            $like = $likex->fetch(PDO::FETCH_ASSOC);
-
-            if($like != false)
-            {
-              if($like["likea"] == 1) $likeencontrado=true;
-              else if($like["dislikea"] == 1) $dislikeencontrado=true;
-            }
-
-            //like hover
-
             if ($urlfoto != false && $numfotos > 1) {
                 while ($_SESSION["lastPhoto"] == $urlfoto["url"]) {
                     $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
@@ -134,50 +65,10 @@ if (!isset($_SESSION["iduser"])) {
                 }
                 $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardem la URL de la foto en la variable de sessió lastPhoto
                 $textofoto = $urlfoto["photoText"];
-                buscarhashtags($textofoto);
-
-                $sql = "SELECT likes from photos WHERE url = :url;";
-                $likesX = $db->prepare($sql);
-                $likesX->execute(array(
-                    ':url' => $urlfoto["url"],
-                ));
-                $likes = $likesX->fetch(PDO::FETCH_ASSOC);
-                $likes = $likes["likes"];
-
-                $sql = "SELECT dislikes from photos WHERE url = :url;";
-                $dislikesX = $db->prepare($sql);
-                $dislikesX->execute(array(
-                    ':url' => $urlfoto["url"],
-                ));
-                $dislikes = $dislikesX->fetch(PDO::FETCH_ASSOC);
-                $dislikes = $dislikes["dislikes"];
-
-                //like hover
-                $sql = "SELECT photoID FROM photos WHERE url = :url";
-                $idphotox = $db->prepare($sql);
-                $idphotox->execute(array(
-                    ':url' => $urlfoto["url"],
-                ));
-                $idphoto = $idphotox->fetch(PDO::FETCH_ASSOC);
-
-                $idphoto = $idphoto["photoID"];
-
-                $sql = "SELECT * FROM Fa_like WHERE iduser=:iduser AND photoID = :photoid";
-                $likex = $db->prepare($sql);
-                $likex->execute(array(
-                    ':iduser' => $_SESSION["iduser"],
-                    ':photoid' => $idphoto,
-                ));
-                $like = $likex->fetch(PDO::FETCH_ASSOC);
-                if($like != false)
-                {
-                  if($like["likea"] == 1) $likeencontrado=true;
-                  else if($like["dislikea"] == 1) $dislikeencontrado=true;
-                }
-
-                //like hover
-
+                
             }
+            include_once "./php/findHashtags.php";
+            include_once "./php/findInteraccion.php";
         }
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -187,7 +78,7 @@ if (!isset($_SESSION["iduser"])) {
         }
 
         if (isset($_POST["like"])) {
-            include_once "./php/likehome.php";
+            include_once "./php/like.php";
             $sql = "SELECT likes, dislikes from photos WHERE url = :url;";
             $likesX = $db->prepare($sql);
             $likesX->execute(array(
@@ -198,7 +89,7 @@ if (!isset($_SESSION["iduser"])) {
             $dislikes = $likesX2["dislikes"];
         }
         if (isset($_POST["dislike"])) {
-            include_once "./php/dislikehome.php";
+            include_once "./php/dislike.php";
             $sql = "SELECT likes, dislikes from photos WHERE url = :url;";
             $likesX = $db->prepare($sql);
             $likesX->execute(array(
@@ -212,19 +103,6 @@ if (!isset($_SESSION["iduser"])) {
 
     //Carregarem el fitxer d'idiomes
     require_once "./langs/lang-" . $idioma . ".php";
-}
-
-function buscarhashtags(&$textofoto)
-{
-    //$textoTemporal = explode("#", $textofoto);
-    $qttHashtag = preg_match_all('/#(\w)*/', $textofoto, $matches);
-
-    foreach ($matches[0] as $tag) {
-        $tag2 = $tag;
-        $tag2 = str_replace("#", "", $tag);
-        $replace = '<a class="linkhashtag"href="./hashtag.php?hashtag=' . $tag2 . '">' . $tag . '</a>';
-        $textofoto = str_replace($tag, $replace, $textofoto);
-    }
 }
 ?>
 <!DOCTYPE html>

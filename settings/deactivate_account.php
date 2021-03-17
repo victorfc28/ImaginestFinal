@@ -52,7 +52,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="../images/icons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="../css/home.css">
+    <link rel="stylesheet" type="text/css" href="../css/settings.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -76,14 +76,16 @@
     </div>
     <div class="contenedorCard">
         <div class="card">
-            <a href="../settings/account_settings.php"><i class="fa fa-arrow-left"></i> <?php echo IDIOMES['BACKSETTINGS']; ?></a>
-            <h2><?php echo IDIOMES['DEACTIVATEACCOUNT']; ?></h2>
+            <a  href="../settings/account_settings.php"><i class="fa fa-arrow-left"></i> <?php echo IDIOMES['BACKSETTINGS']; ?></a>
+            <div class="contenedorOpciones">
+            <h2 class ="tituloOpciones"><?php echo IDIOMES['DEACTIVATEACCOUNT']; ?></h2>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
-                <p><strong><?php echo IDIOMES['ALERT']; ?></strong> <?php echo IDIOMES['DEACTIVATEACCOUNT_ALERT']; ?></p>
-                <p><?php echo IDIOMES['DEACTIVATEACCOUNT_ALERT2']; ?></p>
-                <input type="checkbox" id="deleteCheck" name="deleteCheck" required> <label for="deleteCheck"><?php echo IDIOMES['DEACTIVATEACCOUNT_CHECK']; ?></label><br>
-                <input type="submit" value="<?php echo IDIOMES['DEACTIVATEACCOUNT']; ?>">
+                <p><strong><?php echo IDIOMES['ALERT']; ?></strong> <?php echo IDIOMES['DEACTIVATEACCOUNT_ALERT']; ?></p></br>
+                <p><?php echo IDIOMES['DEACTIVATEACCOUNT_ALERT2']; ?></p></br>
+                <input type="checkbox" id="deleteCheck" name="deleteCheck" required> <label for="deleteCheck"><?php echo IDIOMES['DEACTIVATEACCOUNT_CHECK']; ?></label></br></br></br>
+                <input class ="opciones btn btn-secondary" type="submit" value="<?php echo IDIOMES['DEACTIVATEACCOUNT']; ?>">
             </form>
+        </div>
         </div>    
     </div>
     <!-- Site footer -->

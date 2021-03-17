@@ -1,0 +1,241 @@
+body{
+  background-color: rgb(245, 245, 245)!important;
+}
+.navC {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 55px;
+  box-shadow: 10px 0 3px rgba(0, 0, 0, 31);
+  background-color: #2896f0;
+  display: flex;
+  overflow-x: auto;
+}
+.botonColgarFoto{
+  background-color: inherit;
+  border: 0px;
+}
+.nav__icon{
+  color: rgb(255, 255, 255);   
+  font-size: 18px;
+  transition: 0.3s;
+}
+.nav__icon:hover {
+  color: rgb(253, 187, 255);   
+  transition: 0.3s;
+}
+
+
+a {
+  color: inherit !important;
+  text-decoration: inherit !important;
+}
+a:hover {
+  color: inherit !important;
+  text-decoration: inherit !important;
+}
+
+
+
+.contenedorlogo{
+  box-shadow: 0 0.9px 5px rgba(0, 0, 0, 0.2);
+  background: #9053c7;
+  background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0);
+  background: -o-linear-gradient(-135deg, #c850c0, #4158d0);
+  background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 1;
+
+}
+.logo{
+    width: 175px;
+  }
+.navbartop{
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 25px;
+}
+.itemnavbar{
+  margin-left: 15px;
+}
+/*carrousel*/
+
+.card{
+  margin: 0 auto; /* Added */
+  float: none; /* Added */
+  margin-top: 75px;
+  background-color: inherit!important;
+  border: 0px !important;
+}
+.contenedorOpciones{
+  display: flex;
+  flex-direction: column;
+
+}
+
+.link{
+  margin-top: 25px;
+}
+
+.contenedorCard{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+.card{
+  width: 18rem;
+}
+.contenedortextofoto{
+  margin-left: 3%;
+}
+}
+
+@media only screen and (min-width: 1000px) {
+
+  .logo{
+    margin-left: 200px;
+  }
+  .navbartop{
+    margin-right: 185.7px;
+  }
+
+  .card{
+    width: 50rem;
+  }
+  .alerta{
+    margin-top: 7%!important;
+  }
+  }
+
+
+/*carrousel*/
+
+/*textofoto*/
+
+@media only screen and (max-width: 600px) {
+  .textofoto{
+    width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    display:block;
+    margin-bottom: 75px;
+    margin-top: 40px;
+    text-align: justify;
+  }
+  .alerta{
+    margin-top: 18%!important;
+  }
+  }
+  @media only screen and (min-width: 601px) {
+    .card{
+      width: 30rem;
+      margin-bottom: 100px;
+    }
+    .textofooter{
+      margin-top: 10px;
+    }
+    .alerta{
+      margin-top: 15%!important;
+    }
+    }
+    @media only screen and (min-width: 750px) {
+            .card{
+        width: 40rem;
+      }
+      .textofooter{
+        margin-top: 10px;
+      }
+      .alerta{
+        margin-top: 10%!important;
+      }
+      }
+      @media only screen and (min-width: 1100px) {
+        .alerta{
+          margin-top: 5%!important;
+        }
+        }
+/*textofoto*/
+  
+.card-body{
+  border-top: 1px solid rgba(0,0,0,.125);;
+}
+
+/*barra de desplazamiento*/
+::-webkit-scrollbar{
+  width: 3px;
+  background-color: #F5F5F5;
+}
+::-webkit-scrollbar-track{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb{
+  background-color: rgb(0, 68, 255); 
+  background-image: -webkit-linear-gradient(90deg,rgba(255, 255, 255, .2) 25%,transparent 25%,transparent 50%,rgba(255, 255, 255, .2) 50%,rgba(255, 255, 255, .2) 75%,transparent 75%,transparent)
+}
+
+
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  
+  width: 100%;
+  height: 50px!important;
+  background-color: inherit;
+  color: #26272b;
+  text-align: center;
+  border-top: 1px solid rgb(209, 209, 209);
+}
+.textofoto
+{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.filaOpciones{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.opciones{
+  margin-top: 50px!important;
+  width: auto!important;
+  height: auto!important;
+  
+}
+input{
+  height: 20px!important;
+  margin-top: auto!important;
+    margin-bottom: auto!important;
+    width: 100px !important;
+}
+
+.volver{
+  width: auto !important;
+}
+form{
+  margin-top: 25px;
+}
+
+.tituloOpciones{
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgb(104, 104, 104)!important;
+  margin-top: 30px;
+}
