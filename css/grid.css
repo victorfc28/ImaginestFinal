@@ -4,12 +4,16 @@
     font-family: 'Lato', sans-serif;
     font-size: 3em;
     color: #797979;
-
+    border-bottom: 1px solid #797979!important;
+    width: 70% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 .contenedorgrid{
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 20px;
 
 }
 .contenedortabla
