@@ -9,7 +9,7 @@ if(!isset($_SESSION["iduser"])){
   $idioma = $_SESSION["language"];
 
   require_once "./php/database_connect.php";
-  $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser WHERE photos.url = :url";
+  $sql = "SELECT url,photoText,users.username ,users.iduser FROM photos INNER JOIN users on photos.iduser = users.iduser WHERE photos.url = :url";
   $foto = $db->prepare($sql);
   $foto->execute(array(
     ':url' => $_GET["url"],
@@ -149,8 +149,10 @@ if(!isset($_SESSION["iduser"])){
               <input type="submit" class="material-icons iconosfoto2" name="dislike" value="mood_bad"></input>'.$dislikes.'
               </div>';
             }
-
-            echo '<div class="contenedortextofoto"><b>' . $contenidofoto["username"] . ": </b>" . $textofoto.'</div>';
+            if(isset($contenidofoto["iduser"])) echo '<div class="contenedortextofoto"><a href="./profile.php?user='.$contenidofoto["iduser"].'"><b>' . $contenidofoto["username"] . ": </b></a>" . $textofoto . '</div>';
+            else echo '<div class="contenedortextofoto"><b>' . $contenidofoto["username"] . ": </b>" . $textofoto . '</div>';
+        
+            //echo '<div class="contenedortextofoto"><b>' . $contenidofoto["username"] . ": </b>" . $textofoto.'</div>';
           }?>
 
       </div>
