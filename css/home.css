@@ -80,6 +80,7 @@ a:hover {
   flex-wrap: nowrap;
   justify-content: space-between;
   margin-top: 20px;
+  margin-bottom: 75px;
 }
 .iconosfoto{
   width: 50px;
@@ -149,7 +150,7 @@ a:hover {
   }
 
   .contenedorfoto{
-    margin-top: 35% !important;
+    margin-top: 20% !important;
   }
 
   .alerta{

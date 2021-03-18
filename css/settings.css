@@ -254,3 +254,12 @@ form{
   background-color: inherit!important;
   color: #b1b1b1!important;
 }
+.contenedordesactivar{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.check{
+  width: 3%!important;
+}

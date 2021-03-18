@@ -83,7 +83,11 @@
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
                 <p><strong><?php echo IDIOMES['ALERT']; ?></strong> <?php echo IDIOMES['DEACTIVATEACCOUNT_ALERT']; ?></p></br>
                 <p><?php echo IDIOMES['DEACTIVATEACCOUNT_ALERT2']; ?></p></br>
-                <input type="checkbox" id="deleteCheck" name="deleteCheck" required> <label for="deleteCheck"><?php echo IDIOMES['DEACTIVATEACCOUNT_CHECK']; ?></label></br></br></br>
+                <div class="contenedordesactivar">
+                <input  class ="check" type="checkbox" id="deleteCheck" name="deleteCheck" required> 
+                <label for="deleteCheck"><?php echo IDIOMES['DEACTIVATEACCOUNT_CHECK']; ?></label>
+                </div>
+            </br></br></br>
                 <input class ="opciones btn btn-secondary" type="submit" value="<?php echo IDIOMES['DEACTIVATEACCOUNT']; ?>">
             </form>
         </div>
