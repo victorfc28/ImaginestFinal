@@ -2,6 +2,10 @@
 session_start();
 $direccionfotos="";
 $nombreUsuario="";
+$iduser="";
+
+if(isset($_GET["user"])) $iduser=$_GET["user"];
+else $iduser=$_SESSION["iduser"];
 if(!isset($_SESSION["iduser"])){
     header("Location: ./index.php?redirected");
     exit;
@@ -9,28 +13,28 @@ if(!isset($_SESSION["iduser"])){
   //Carreguem l'idioma de la sessió
   $idioma = $_SESSION["language"];
 
-  buscarfotosperfil($direccionfotos,$nombreUsuario);
+  buscarfotosperfil($direccionfotos,$nombreUsuario,$iduser);
 
   //Carregarem el fitxer d'idiomes
   require_once("./langs/lang-".$idioma.".php");
 }
 
-function buscarfotosperfil(&$direccionfotos,&$nombreUsuario)
+function buscarfotosperfil(&$direccionfotos,&$nombreUsuario,$iduser)
 {
   require_once "./php/database_connect.php";
   $sql = "SELECT url from photos where iduser=:id";
   $fotosuser = $db->prepare($sql);
   $fotosuser->execute(array(
-      ':id' => $_SESSION["iduser"]
+      ':id' => $iduser
   ));
 
   $sql = "SELECT username from users where iduser=:id";
   $user = $db->prepare($sql);
   $user->execute(array(
-      ':id' => $_SESSION["iduser"]
+      ':id' => $iduser
   ));
   $usern = $user->fetch(PDO::FETCH_ASSOC);
-  $nombreUsuario = $usern["username"];
+  if(isset($usern["username"]))$nombreUsuario = $usern["username"];
   
   foreach($fotosuser as $foto)
   {
@@ -38,6 +42,7 @@ function buscarfotosperfil(&$direccionfotos,&$nombreUsuario)
   }
   $direccionfotos = explode("|",$direccionfotos);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang=<?php echo "$idioma"?>>
@@ -67,6 +72,7 @@ function buscarfotosperfil(&$direccionfotos,&$nombreUsuario)
         <i class="material-icons nav__icon">person</i>
       </a>
       <ul class="dropdown-menu " aria-labelledby="dropdownMenuLink">
+      <li class="username"><div class="dropdown-item usernametext"><?php echo $_SESSION["username"] ?></div></li>
         <li><a class="dropdown-item" href="./profile.php"><?php echo IDIOMES['MYPROFILE']; ?></a></li>
         <li><a class="dropdown-item" href="./settings/account_settings.php"><?php echo IDIOMES['SETTINGS']; ?></a></li>
         <li><a class="dropdown-item" href="./logout.php"><?php echo IDIOMES['LOGOUT_BUTTON']; ?></a></li>

@@ -27,6 +27,7 @@
                                 } 
                                 $_SESSION["iduser"] = $fila['iduser'];
                                 $_SESSION["language"] = $fila['language']; //L'usuari visualitzara la interfície amb el seu idioma
+                                $_SESSION["username"] = $fila['username'];
                                 setcookie('logged',0,time()+3600247); //Crearem una cookie per indicar que l'usuari acaba d'entrar i aixi poder mostrar-li la seva última foto penjada
                                 header('Location: ./home.php');
                                 exit;

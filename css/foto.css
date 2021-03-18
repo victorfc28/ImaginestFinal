@@ -285,3 +285,14 @@ a:hover {
   border:0;
   color: #9053c7;
 }
+
+.usernametext{
+  margin-left: auto!important;
+  margin-right: auto!important;
+  width: fit-content!important;
+  color: #b1b1b1!important;
+}
+.usernametext:hover{
+  background-color: inherit!important;
+  color: #b1b1b1!important;
+}

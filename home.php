@@ -34,42 +34,10 @@ if (!isset($_SESSION["iduser"])) {
             $_SESSION["lastPhoto"] = null;
             $numfotos = 0;
             setcookie('logged', 1, time() + 3600247);
+            include_once "./php/searchphoto.php";
         }
-    } else if (isset($_COOKIE["logged"]) && $_COOKIE["logged"] == 1) {
-        //Comprobarem el número de fotos penjades
-        $sql = "SELECT count(*) as Total FROM photos;";
-        $countfotos = $db->query($sql);
-        if ($countfotos) {
-            foreach ($countfotos as $fila) {
-                $numfotos = $fila['Total'];
-            }
-        }
-
-        //Si no hi ha fotos penjades
-        if ($numfotos != 0) {
-            $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
-            $ultimafoto = $db->prepare($sql);
-            $ultimafoto->execute(array(
-                ':iduser' => $_SESSION["iduser"],
-            ));
-            $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-            $textofoto = $urlfoto["photoText"];
-            if ($urlfoto != false && $numfotos > 1) {
-                while ($_SESSION["lastPhoto"] == $urlfoto["url"]) {
-                    $sql = "SELECT url,photoText,users.username FROM photos INNER JOIN users on photos.iduser = users.iduser ORDER BY RAND() LIMIT 1;";
-                    $ultimafoto = $db->prepare($sql);
-                    $ultimafoto->execute(array(
-                        ':iduser' => $_SESSION["iduser"],
-                    ));
-                    $urlfoto = $ultimafoto->fetch(PDO::FETCH_ASSOC);
-                }
-                $_SESSION["lastPhoto"] = $urlfoto["url"]; //Guardem la URL de la foto en la variable de sessió lastPhoto
-                $textofoto = $urlfoto["photoText"];
-                
-            }
-            include_once "./php/findHashtags.php";
-            include_once "./php/findInteraccion.php";
-        }
+    } else  {
+        include_once "./php/searchphoto.php";
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //Adjuntarem el fitxer per penjar les fotos
@@ -145,6 +113,7 @@ if ($numfotos == 0) {
         <i class="material-icons nav__icon">person</i>
       </a>
       <ul class="dropdown-menu " aria-labelledby="dropdownMenuLink">
+        <li class="username"><div class="dropdown-item usernametext"><?php echo $_SESSION["username"] ?></div></li>
         <li><a class="dropdown-item" href="./profile.php"><?php echo IDIOMES['MYPROFILE']; ?></a></li>
         <li><a class="dropdown-item" href="./settings/account_settings.php"><?php echo IDIOMES['SETTINGS']; ?></a></li>
         <li><a class="dropdown-item" href="./logout.php"><?php echo IDIOMES['LOGOUT_BUTTON']; ?></a></li>
@@ -200,8 +169,9 @@ if (isset($urlfoto["url"])) {
       <input type="submit" class="material-icons iconosfoto2" name="dislike" value="mood_bad"></input>'.$dislikes.'
       </div>';
     }
-
-    echo '<div class="contenedortextofoto"><b>' . $urlfoto["username"] . ": </b>" . $textofoto . '</div>';
+    if(isset($urlfoto["iduser"])) echo '<div class="contenedortextofoto"><a href="./profile.php?user='.$urlfoto["iduser"].'"><b>' . $urlfoto["username"] . ": </b></a>" . $textofoto . '</div>';
+    else echo '<div class="contenedortextofoto"><b>' . $urlfoto["username"] . ": </b>" . $textofoto . '</div>';
+    
 }?>
         </div>
       </div>

@@ -148,12 +148,18 @@ a:hover {
     transition: 0.3s;
   }
 
+  .contenedorfoto{
+    margin-top: 35% !important;
+  }
+
   .alerta{
     margin-top: 18%!important;
   }
   .contenedortextofoto{
     margin-left: 3%;
+   
   }
+  
   }
   @media only screen and (min-width: 601px) {
     .botonizquierda{
@@ -189,6 +195,7 @@ a:hover {
     }
     .contenedortextofoto{
       margin-left: 3%;
+      
     }
     }
     @media only screen and (min-width: 750px) {
@@ -217,6 +224,7 @@ a:hover {
       }
       .contenedorfoto{
         margin-bottom: 100px;
+        margin-top: 50px !important;
       }
       .textofooter{
         margin-top: 10px;
@@ -312,4 +320,19 @@ a:hover {
   height: 25px;
   border:0;
   color: #9053c7;
+}
+.username{
+  border-bottom: 1px solid #dfdfdf;
+  margin-bottom: 10px;
+}
+
+.usernametext{
+  margin-left: auto!important;
+  margin-right: auto!important;
+  width: fit-content!important;
+  color: #b1b1b1!important;
+}
+.usernametext:hover{
+  background-color: inherit!important;
+  color: #b1b1b1!important;
 }

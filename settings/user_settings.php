@@ -96,7 +96,7 @@ require_once "../langs/lang-" . $idioma . ".php";
 }
 ?>
     <div class="contenedorlogo">
-        <img class ="logo" src="../images/imaginestW.png"></img>
+    <a href="../home.php"><img class ="logo" src="../images/imaginestW.png"></img></a>
             <div class="navbartop">
                 <a class="itemnavbar"href="../home.php">
                     <i class="material-icons nav__icon">home</i>
@@ -105,6 +105,7 @@ require_once "../langs/lang-" . $idioma . ".php";
                     <i class="material-icons nav__icon">person</i>
                 </a>
                 <ul class="dropdown-menu " aria-labelledby="dropdownMenuLink">
+                <li class="username"><div class="dropdown-item usernametext"><?php echo $_SESSION["username"] ?></div></li>
                     <li><a class="dropdown-item" href="../profile.php"><?php echo IDIOMES['MYPROFILE']; ?></a></li>
                     <li><a class="dropdown-item" href="./account_settings.php"><?php echo IDIOMES['SETTINGS']; ?></a></li>
                     <li><a class="dropdown-item" href="../logout.php"><?php echo IDIOMES['LOGOUT_BUTTON']; ?></a></li>

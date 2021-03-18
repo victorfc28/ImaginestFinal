@@ -91,6 +91,10 @@ a:hover {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 100px;
+}
+.card{
+  width: 60%!important;
 }
 
 @media only screen and (max-width: 600px) {
@@ -238,4 +242,15 @@ form{
   padding-bottom: 5px;
   border-bottom: 1px solid rgb(104, 104, 104)!important;
   margin-top: 30px;
+}
+
+.usernametext{
+  margin-left: auto!important;
+  margin-right: auto!important;
+  width: fit-content!important;
+  color: #b1b1b1!important;
+}
+.usernametext:hover{
+  background-color: inherit!important;
+  color: #b1b1b1!important;
 }
